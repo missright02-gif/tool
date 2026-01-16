@@ -5,11 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trips & Traffic - 出遊與交通</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 這裡加入簡單的圖片樣式，確保圖片不會太大 */
+        .hero-image {
+            width: 100%;
+            max-width: 400px; /* 您可以調整圖片最大寬度 */
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
 <body>
 
     <div class="hero-section">
-        <div class="hero-content">
+        <div class="hero-content" style="text-align: center;">
+            
+            <img src="images/homepage.jpg" alt="首頁圖片" class="hero-image">
+            
             <h1>Trips & Traffic</h1>
             <p>出遊與交通</p>
             
@@ -30,22 +46,15 @@
          * 導向下一頁 (學習選單)
          */
         function goToNextPage() {
-            // 實際使用時，請將 "learning-menu.html" 替換為您的選單檔案名稱
+            // 請確認您的 GitHub 專案中有 learning-menu.html 檔案
             window.location.href = "learning-menu.html"; 
-            
-            // 測試時可以使用 alert：
-            // alert("正在導向下一頁 (學習選單)...");
         }
 
         /**
          * 導向前一頁
          */
         function goToPreviousPage() {
-            // 這是首頁，通常沒有前一頁
             alert("目前已在首頁，沒有前一頁內容。");
-            
-            // 如果這不是首頁，則使用以下程式碼：
-            // window.history.back(); // 返回瀏覽器歷史記錄中的上一頁
         }
     </script>
 
