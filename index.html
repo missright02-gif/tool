@@ -5,27 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trips & Traffic - 出遊與交通</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* 這裡加入簡單的圖片樣式，確保圖片不會太大 */
-        .hero-image {
-            width: 100%;
-            max-width: 400px; /* 您可以調整圖片最大寬度 */
-            height: auto;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
 </head>
 <body>
 
     <div class="hero-section">
-        <div class="hero-content" style="text-align: center;">
-            
-            <img src="images/hero-background.png" alt="首頁圖片" class="hero-image">
-            
+        <div class="hero-content">
             <h1>Trips & Traffic</h1>
             <p>出遊與交通</p>
             
@@ -42,17 +26,10 @@
     </div>
 
     <script>
-        /**
-         * 導向下一頁 (學習選單)
-         */
         function goToNextPage() {
-            // 請確認您的 GitHub 專案中有 learning-menu.html 檔案
             window.location.href = "learning-menu.html"; 
         }
 
-        /**
-         * 導向前一頁
-         */
         function goToPreviousPage() {
             alert("目前已在首頁，沒有前一頁內容。");
         }
