@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>旅遊交通英文複習 - 本地圖片增強版</title>
+    <title>旅遊交通英文複習 - 圖片自動偵測版</title>
     <style>
         body {
             margin: 0; padding: 0;
@@ -29,18 +29,18 @@
         .word-main { font-size: 3.5em; font-weight: bold; color: #d32f2f; }
         .ipa { font-size: 1.8em; color: #546e7a; font-family: 'Times New Roman', serif; }
         .pos { font-style: italic; font-size: 1.4em; color: #78909c; }
-        .chinese-def { font-size: 2em; font-weight: bold; color: #263238; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+        .chinese-def { font-size: 2.2em; font-weight: bold; color: #263238; margin-bottom: 25px; border-bottom: 3px solid #f0f0f0; padding-bottom: 10px; }
 
         /* 圖片容器 */
         .word-image-container {
-            width: 100%; height: 320px;
+            width: 100%; height: 350px;
             background: #f5f5f5; border-radius: 20px;
             margin-bottom: 30px; overflow: hidden;
             display: flex; justify-content: center; align-items: center;
             position: relative; border: 1px dashed #ced4da;
         }
-        .word-image { width: 100%; height: 100%; object-fit: cover; z-index: 2; }
-        .img-placeholder { position: absolute; color: #adb5bd; text-align: center; font-size: 1.2em; z-index: 1; }
+        .word-image { width: 100%; height: 100%; object-fit: cover; z-index: 2; position: relative; }
+        .img-placeholder { position: absolute; color: #adb5bd; text-align: center; font-size: 1.2em; z-index: 1; padding: 20px; }
 
         .example-section { background: #f9fbfd; padding: 25px; border-radius: 20px; border-left: 8px solid #007bff; }
         .ex-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 10px; }
@@ -58,7 +58,7 @@
 
         @media (max-width: 600px) { 
             .word-main { font-size: 2.5em; } 
-            .word-image-container { height: 220px; }
+            .word-image-container { height: 250px; }
         }
     </style>
 </head>
@@ -66,7 +66,7 @@
 
     <div class="vocab-container">
         <div class="top-bar"></div>
-        <button class="home-btn" onclick="location.reload()">🏠 重新開始</button>
+        <button class="home-btn" onclick="location.reload()">🏠 重來</button>
 
         <div id="word-card"></div>
 
@@ -108,7 +108,6 @@
         function renderCard() {
             const card = document.getElementById('word-card');
             const item = vocabulary[currentIndex];
-            // 格式化編號為 v01, v02...
             const imgId = "v" + String(currentIndex + 1).padStart(2, '0');
 
             card.innerHTML = `
@@ -122,8 +121,13 @@
                 <div class="chinese-def">${item.zh}</div>
 
                 <div class="word-image-container">
-                    <div class="img-placeholder">🖼️ 尚未偵測到圖片<br>請將圖片命名為 <b>${imgId}.jpg</b><br>並放入 images 資料夾中</div>
-                    <img src="images/${imgId}.jpg" class="word-image" alt="${item.word}" onerror="this.style.display='none'">
+                    <div class="img-placeholder">
+                        🖼️ 尚未偵測到圖片<br>
+                        請在 images 資料夾放進 <b>${imgId}.jpg</b><br>
+                        或 <b>${imgId}.png</b>
+                    </div>
+                    <img id="vocab-img" src="images/${imgId}.jpg" class="word-image" alt="${item.word}" 
+                         onerror="tryPng(this, '${imgId}')">
                 </div>
 
                 <div class="example-section">
@@ -138,6 +142,17 @@
             document.getElementById('progress').innerText = `${currentIndex + 1} / ${vocabulary.length}`;
             document.getElementById('prevBtn').disabled = currentIndex === 0;
             document.getElementById('nextBtn').innerText = (currentIndex === vocabulary.length - 1) ? "完成複習" : "下一個 →";
+        }
+
+        // B版本核心功能：如果 jpg 失敗，嘗試 png，再失敗則隱藏
+        function tryPng(imgElement, imgId) {
+            // 如果當前報錯的是 jpg，則換成 png 試試看
+            if (imgElement.src.toLowerCase().endsWith('.jpg')) {
+                imgElement.src = 'images/' + imgId + '.png';
+            } else {
+                // 如果 png 也報錯，隱藏 img 標籤顯示底下的提示字
+                imgElement.style.display = 'none';
+            }
         }
 
         function changeWord(step) {
