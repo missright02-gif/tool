@@ -1,0 +1,86 @@
+/* menu-style.css */
+
+/* 整個容器置中 */
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #34495e, #2c3e50); /* 深色漸層背景 */
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+/* 標題 */
+.menu-container h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.menu-container p {
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+/* 選單格子排列 */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* 選單項目按鈕 */
+.menu-item {
+    background-color: rgba(255,255,255,0.1);
+    border: 2px solid white;
+    border-radius: 15px;
+    padding: 30px 20px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.menu-item:hover {
+    background-color: rgba(255,255,255,0.25);
+    transform: translateY(-5px);
+}
+
+/* icon 樣式 */
+.menu-item .icon {
+    font-size: 2.5em;
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* 標題與描述 */
+.menu-item h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.menu-item p {
+    font-size: 1em;
+}
+
+/* 返回首頁按鈕 */
+.back-button {
+    margin-top: 50px;
+    background-color: rgba(255,255,255,0.2);
+    border: 2px solid white;
+    border-radius: 40px;
+    padding: 12px 30px;
+    font-size: 1.2em;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: rgba(255,255,255,0.35);
+    transform: scale(1.05);
+}
