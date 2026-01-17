@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>單字複習 - 旅遊交通篇</title>
+    <title>單字複習 - 旅遊交通篇 (穩定版)</title>
     <style>
         body {
             margin: 0;
@@ -47,20 +47,20 @@
         }
 
         .word-main {
-            font-size: 3.5em;
+            font-size: 3.2em;
             font-weight: bold;
             color: #d32f2f;
         }
 
         .ipa {
-            font-size: 1.8em;
+            font-size: 1.6em;
             color: #546e7a;
             font-family: 'Times New Roman', serif;
         }
 
         .pos {
             font-style: italic;
-            font-size: 1.4em;
+            font-size: 1.3em;
             color: #78909c;
         }
 
@@ -77,11 +77,17 @@
             width: 100%;
             text-align: center;
             margin-bottom: 30px;
+            background: #eee;
+            border-radius: 15px;
+            min-height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .word-image {
             max-width: 100%;
-            height: 250px;
+            max-height: 350px;
             object-fit: cover;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
@@ -102,9 +108,10 @@
         }
 
         .ex-en {
-            font-size: 1.6em;
+            font-size: 1.5em;
             color: #01579b;
             line-height: 1.3;
+            font-style: italic;
         }
 
         .ex-zh {
@@ -171,8 +178,9 @@
         }
 
         @media (max-width: 600px) {
-            .word-main { font-size: 2.5em; }
+            .word-main { font-size: 2.2em; }
             .vocab-container { padding: 20px; }
+            .ipa { font-size: 1.2em; }
         }
     </style>
 </head>
@@ -180,7 +188,7 @@
 
     <div class="vocab-container">
         <div class="top-bar"></div>
-        <button class="home-btn" onclick="alert('返回選單')">🏠 返回選單</button>
+        <button class="home-btn" onclick="location.reload()">🏠 重新開始</button>
 
         <div id="word-card">
             </div>
@@ -196,10 +204,10 @@
         const vocabulary = [
             {
                 word: "navigate",
-                ipa: "/ˈnævɪɡeɪt/",
+                ipa: "/ˈnæv.ə.ɡeɪt/",
                 pos: "(v.)",
                 zh: "導航；引導",
-                image: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=800",
+                image: "https://cdn.pixabay.com/photo/2016/11/29/03/47/map-1867156_1280.jpg",
                 exEn: "It’s hard to navigate a new city without a map.",
                 exZh: "沒有地圖的話，很難在新城市中導航。"
             },
@@ -208,16 +216,16 @@
                 ipa: "/ˈsʌb.weɪ/ | /ˈmɛt.roʊ/",
                 pos: "(n.)",
                 zh: "地鐵",
-                image: "https://images.unsplash.com/photo-1510529141012-bb2009893041?w=800",
+                image: "https://cdn.pixabay.com/photo/2014/10/22/18/04/subway-498525_1280.jpg",
                 exEn: "The subway is the fastest way to get around New York City.",
                 exZh: "地鐵是紐約市最快的交通方式。"
             },
             {
                 word: "foreigner",
-                ipa: "/ˈfɔːrənər/",
+                ipa: "/ˈfɔːr.ə.nɚ/",
                 pos: "(n.)",
                 zh: "外國人",
-                image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800",
+                image: "https://cdn.pixabay.com/photo/2017/08/01/21/04/people-2567962_1280.jpg",
                 exEn: "As a foreigner, I always try to learn a few words in the local language.",
                 exZh: "作為外國人，我總是嘗試學習一些當地語言。"
             },
@@ -226,16 +234,16 @@
                 ipa: "/kənˈviː.ni.ənt/",
                 pos: "(adj.)",
                 zh: "方便的",
-                image: "https://images.unsplash.com/photo-1606240217032-4522967df2a6?w=800",
+                image: "https://cdn.pixabay.com/photo/2020/05/18/16/23/vending-machine-5187304_1280.jpg",
                 exEn: "Using a metro card is more convenient than buying tickets every time.",
                 exZh: "使用地鐵卡比每次買票更方便。"
             },
             {
                 word: "government",
-                ipa: "/ˈɡʌv.ərn.mənt/",
+                ipa: "/ˈɡʌv.ɚn.mənt/",
                 pos: "(n.)",
                 zh: "政府",
-                image: "https://images.unsplash.com/photo-1523292562811-8fa7962a78c8?w=800",
+                image: "https://cdn.pixabay.com/photo/2017/09/01/13/56/university-2704306_1280.jpg",
                 exEn: "The government is improving public transportation for tourists.",
                 exZh: "政府正在改善公共交通，方便遊客出行。"
             },
@@ -244,7 +252,7 @@
                 ipa: "/ˈtʊr.ɪst/",
                 pos: "(n.)",
                 zh: "觀光客",
-                image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+                image: "https://cdn.pixabay.com/photo/2016/11/14/03/38/achiever-1822503_1280.jpg",
                 exEn: "Many tourists visit Paris to see the Eiffel Tower.",
                 exZh: "許多觀光客去巴黎參觀艾菲爾鐵塔。"
             },
@@ -253,7 +261,7 @@
                 ipa: "/saɪn/",
                 pos: "(n.)",
                 zh: "標誌",
-                image: "https://images.unsplash.com/photo-1543165796-5426273eaab3?w=800",
+                image: "https://cdn.pixabay.com/photo/2015/12/13/16/32/way-1091398_1280.jpg",
                 exEn: "Always read the signs in the station to find your way.",
                 exZh: "在車站裡，務必閱讀標誌來確認方向。"
             },
@@ -262,16 +270,16 @@
                 ipa: "/mæp/",
                 pos: "(n.)",
                 zh: "地圖",
-                image: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800",
+                image: "https://cdn.pixabay.com/photo/2016/09/01/19/53/pocket-map-1637330_1280.jpg",
                 exEn: "I always carry a map when I travel.",
                 exZh: "旅行時我總是帶著地圖。"
             },
             {
                 word: "passenger",
-                ipa: "/ˈpæsɪndʒər/",
+                ipa: "/ˈpæs.ən.dʒɚ/",
                 pos: "(n.)",
                 zh: "乘客",
-                image: "https://images.unsplash.com/photo-1474487056236-0529c99a78a1?w=800",
+                image: "https://cdn.pixabay.com/photo/2015/01/28/23/34/bus-615423_1280.jpg",
                 exEn: "The train was so full that passengers had to stand.",
                 exZh: "這班火車太滿了，乘客只能站著。"
             },
@@ -280,7 +288,7 @@
                 ipa: "/ˈpɝː.tʃəs/",
                 pos: "(v.)",
                 zh: "購買",
-                image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800",
+                image: "https://cdn.pixabay.com/photo/2017/09/07/08/54/money-2724241_1280.jpg",
                 exEn: "You can purchase tickets at the machine.",
                 exZh: "你可以在機器上購買車票。"
             },
@@ -289,7 +297,7 @@
                 ipa: "/ɪmˈplɔɪ.iː/",
                 pos: "(n.)",
                 zh: "員工",
-                image: "https://images.unsplash.com/photo-1454165833767-027ff39c157c?w=800",
+                image: "https://cdn.pixabay.com/photo/2015/01/09/11/11/office-594132_1280.jpg",
                 exEn: "The subway employee helped me find the right platform.",
                 exZh: "地鐵員工幫助我找到正確的月台。"
             },
@@ -298,7 +306,7 @@
                 ipa: "/ˈlæŋ.ɡwɪdʒ/",
                 pos: "(n.)",
                 zh: "語言",
-                image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800",
+                image: "https://cdn.pixabay.com/photo/2016/10/06/05/19/couples-1718244_1280.jpg",
                 exEn: "Learning the local language can make traveling easier.",
                 exZh: "學習當地語言能讓旅行更輕鬆。"
             },
@@ -307,7 +315,7 @@
                 ipa: "/praɪs/",
                 pos: "(n.)",
                 zh: "價格",
-                image: "https://images.unsplash.com/photo-1518458028785-8fbcd101ebb9?w=800",
+                image: "https://cdn.pixabay.com/photo/2016/11/29/03/53/house-1867187_1280.jpg",
                 exEn: "The price of a subway ticket is cheaper than a taxi.",
                 exZh: "地鐵票的價格比計程車便宜。"
             },
@@ -316,7 +324,7 @@
                 ipa: "/ˈsteɪ.ʃən/",
                 pos: "(n.)",
                 zh: "車站",
-                image: "https://images.unsplash.com/photo-1532302113160-59358f2762a0?w=800",
+                image: "https://cdn.pixabay.com/photo/2016/11/18/15/58/train-1835500_1280.jpg",
                 exEn: "I need to get off at the next station.",
                 exZh: "我要在下一站下車。"
             },
@@ -325,16 +333,16 @@
                 ipa: "/kraʊd/",
                 pos: "(n.)",
                 zh: "人群",
-                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800",
+                image: "https://cdn.pixabay.com/photo/2016/11/29/05/32/audience-1867540_1280.jpg",
                 exEn: "The subway is always crowded during rush hour.",
-                exZh: "尖峰時段，地鐵總是擁擠的。"
+                exZh: "尖峰時時段，地鐵總是擁擠的。"
             },
             {
                 word: "avoid",
                 ipa: "/əˈvɔɪd/",
                 pos: "(v.)",
                 zh: "避免",
-                image: "https://images.unsplash.com/photo-1508847154043-be5407fcaa5a?w=800",
+                image: "https://cdn.pixabay.com/photo/2018/01/31/07/36/secret-3120483_1280.jpg",
                 exEn: "I try to avoid taking the train at peak hours.",
                 exZh: "我儘量避免在尖峰時段搭地鐵。"
             },
@@ -343,7 +351,7 @@
                 ipa: "/dɪˈpɛnd ɑːn/",
                 pos: "(phr.v.)",
                 zh: "依賴；取決於",
-                image: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=800",
+                image: "https://cdn.pixabay.com/photo/2017/07/31/11/31/people-2557399_1280.jpg",
                 exEn: "Your travel time depends on traffic and train schedules.",
                 exZh: "你的旅行時間取決於交通和火車時刻表。"
             },
@@ -352,7 +360,7 @@
                 ipa: "/əˈkrɔːs/",
                 pos: "(prep.)",
                 zh: "橫越；對面",
-                image: "https://images.unsplash.com/photo-1545147986-a9d6f210df77?w=800",
+                image: "https://cdn.pixabay.com/photo/2016/11/22/10/47/architecture-1848937_1280.jpg",
                 exEn: "The metro station is just across the street.",
                 exZh: "地鐵站就在街道的對面。"
             },
@@ -361,7 +369,7 @@
                 ipa: "/ˈtræns.fɝː/",
                 pos: "(v.)",
                 zh: "轉乘",
-                image: "https://images.unsplash.com/photo-1520105072000-f44fc083e50b?w=800",
+                image: "https://cdn.pixabay.com/photo/2015/07/17/20/00/train-849497_1280.jpg",
                 exEn: "You need to transfer at the central station to reach your destination.",
                 exZh: "你需要在中央車站轉乘才能到達目的地。"
             },
@@ -370,7 +378,7 @@
                 ipa: "/peɪ əˈtɛn.ʃən tuː/",
                 pos: "(phr.)",
                 zh: "注意",
-                image: "https://images.unsplash.com/photo-1484981138541-3d074aa97716?w=800",
+                image: "https://cdn.pixabay.com/photo/2016/11/08/05/20/adventure-1807524_1280.jpg",
                 exEn: "Pay attention to the announcements on the train.",
                 exZh: "注意聽火車上的廣播。"
             },
@@ -379,9 +387,18 @@
                 ipa: "/ˈhɛlp.fəl/",
                 pos: "(adj.)",
                 zh: "有幫助的",
-                image: "https://images.unsplash.com/photo-1521791136364-798a730bb3be?w=800",
+                image: "https://cdn.pixabay.com/photo/2017/02/01/21/29/clark-2031448_1280.jpg",
                 exEn: "The staff at the tourist center were very helpful.",
                 exZh: "旅遊中心的工作人員非常有幫助。"
+            },
+            {
+                word: "destination",
+                ipa: "/ˌdes.tɪˈneɪ.ʃən/",
+                pos: "(n.)",
+                zh: "目的地",
+                image: "https://cdn.pixabay.com/photo/2014/11/02/10/41/plane-513641_1280.jpg",
+                exEn: "We will arrive at our destination in ten minutes.",
+                exZh: "我們將在十分鐘後到達目的地。"
             }
         ];
 
@@ -391,6 +408,7 @@
             const card = document.getElementById('word-card');
             const item = vocabulary[currentIndex];
 
+            // 這裡使用了 onerror 處理機制，若圖片失效會顯示佔位圖
             card.innerHTML = `
                 <div class="word-header">
                     <span class="word-main">${item.word}</span>
@@ -402,7 +420,10 @@
                 <div class="chinese-def">${item.zh}</div>
 
                 <div class="word-image-container">
-                    <img src="${item.image}" class="word-image" alt="word visual">
+                    <img src="${item.image}" 
+                         class="word-image" 
+                         alt="word visual"
+                         onerror="this.src='https://placehold.co/800x450/e0e0e0/546e7a?text=Loading+Image...'">
                 </div>
 
                 <div class="example-section">
