@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>對話練習 - Central Park</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', 'Microsoft JhengHei', sans-serif;
+            background-color: #f0f7ff;
+            background-image: repeating-linear-gradient(
+                45deg, 
+                transparent, 
+                transparent 25px, 
+                rgba(0, 123, 255, 0.03) 25px, 
+                rgba(0, 123, 255, 0.03) 26px
+            );
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .dialogue-container {
+            width: 95%;
+            max-width: 800px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .progress-info { 
+            color: #1a5276; 
+            font-weight: bold; 
+            font-size: 1.3em; 
+        }
+
+        .dialogue-screen {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .speech-bubble {
+            padding: 30px;
+            border-radius: 25px;
+            position: relative;
+            max-width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .speech-bubble.left {
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+            border-left: 10px solid #007bff;
+        }
+
+        .speech-bubble.right {
+            align-self: flex-end;
+            background: #e3f2fd;
+            border-bottom-right-radius: 0;
+            border-right: 10px solid #00c853;
+        }
+
+        .speaker-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #546e7a;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .text-en {
+            font-size: 2em; /* 英文超大字體 */
+            color: #2c3e50;
+            line-height: 1.3;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .text-zh {
+            font-size: 1.5em; /* 中文大字體 */
+            color: #607d8b;
+            padding-top: 15px;
+            border-top: 2px dashed #cfd8dc;
+            margin-bottom: 20px;
+        }
+
+        .bubble-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: white;
+            border: 2px solid #007bff;
+            color: #007bff;
+            border-radius: 12px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .action-btn:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .navigation-controls {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-btn {
+            padding: 15px 45px;
+            border-radius: 50px;
+            border: none;
+            background: #90a4ae;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3em;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .nav-btn.next {
+            background: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dialogue-container">
+        <div class="top-nav">
+            <button style="border:none; background:none; cursor:pointer; color:#007bff; font-weight:bold; font-size:1.2em;" onclick="location.href='menu.html'">🏠 返回選單</button>
+            <div class="progress-info">頁數：<span id="page-num">1</span> / <span id="total-pages"></span></div>
+        </div>
+
+        <div id="dialogue-screen" class="dialogue-screen"></div>
+
+        <div class="navigation-controls">
+            <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">上一頁</button>
+            <button class="nav-btn next" id="nextBtn" onclick="changePage(1)">下一頁</button>
+        </div>
+    </div>
+
+    <script>
+        const dialogues = [
+          { speaker: "Maria", en: "Excuse me, sir. Could you help me?", zh: "打擾一下先生，可以幫我一個忙嗎？" },
+          { speaker: "Henry", en: "I can try. What’s up?", zh: "我可以試試看，怎麼了嗎？" },
+          { speaker: "Maria", en: "I want to go to Central Park. Do you know how to get there from here?", zh: "我要去中央公園，你知道從這裡怎麼去嗎？" },
+          { speaker: "Henry", en: "Yes, I do, but it is pretty far away.", zh: "我知道，不過那裡離這裡滿遠的。" },
+          { speaker: "Maria", en: "Oh, really? Isn’t Central Park in Manhattan?", zh: "喔，真的嗎？中央公園不是在曼哈頓嗎？" },
+          { speaker: "Henry", en: "Yes, but we’re in Lower Manhattan now. Central Park is quite far from here.", zh: "沒錯，不過我們現在在曼哈頓南邊，中央公園離這裡還有一段距離。" },
+          { speaker: "Maria", en: "Oh, I see. How do I get there? Can I walk?", zh: "原來如此。那我要怎麼去？可以用走的嗎？" },
+          { speaker: "Henry", en: "Well, you could, but it would take over an hour.", zh: "嗯，你可以走路去，但大概要一個多小時。" },
+          { speaker: "Maria", en: "Oh, no! I need to meet my friend there in 30 minutes. What should I do?", zh: "糟糕！我三十分鐘後要在那裡跟朋友見面，怎麼辦？" },
+          { speaker: "Henry", en: "Don’t worry. You can take the subway.", zh: "別擔心，你可以搭地鐵。" },
+          { speaker: "Maria", en: "I haven’t ridden the subway in New York yet. I’ve heard it is very old.", zh: "我還沒在紐約搭過地鐵，我聽說地鐵很老舊。" },
+          { speaker: "Henry", en: "Yes, it is, and it’s not very clean. However, it will take you to Central Park.", zh: "是啊，車子很老，而且也不是很乾淨，不過可以帶你到中央公園。" },
+          { speaker: "Maria", en: "OK. I’ll try it. Where should I go?", zh: "好吧，我試試看。那我應該往哪裡走？" },
+          { speaker: "Henry", en: "Walk down this street until you get to Chrystie Street. Then, turn left.", zh: "沿著這條路直走，走到 Chrystie Street，再左轉。" },
+          { speaker: "Maria", en: "OK, then what?", zh: "好，之後呢？" },
+          { speaker: "Henry", en: "Walk for about five minutes, until you see Grand Street Station. There, you will get on the subway train called the B Train.", zh: "再走大約五分鐘，你會看到 Grand Street 車站。在那裡搭一班叫做 B 線的地鐵。" },
+          { speaker: "Maria", en: "Then what do I do?", zh: "之後我要怎麼做？" },
+          { speaker: "Henry", en: "You will ride the subway for eight stops. Get off at the 72nd Street Station.", zh: "在地鐵上坐八站，在 72 街車站下車。" },
+          { speaker: "Maria", en: "And then I’ll be at Central Park?", zh: "下車之後就到中央公園了嗎？" },
+          { speaker: "Henry", en: "Yes, when you come out of the subway station, you’ll see the park. You can’t miss it!", zh: "對，出了地鐵站你就會看到公園，一定看得到。" },
+          { speaker: "Maria", en: "Thank you! You have been so helpful.", zh: "太謝謝你了，你幫了我很大的忙。" },
+          { speaker: "Henry", en: "You’re welcome. Where will you meet your friend?", zh: "不客氣。你要在哪裡跟朋友見面？" },
+          { speaker: "Maria", en: "I will meet her at the lake in Central Park.", zh: "我要在中央公園裡的湖邊跟她見面。" },
+          { speaker: "Henry", en: "OK, perfect. That is very close to 72nd Street Station. You will see signs and a map when you get there.", zh: "那就剛好，湖離 72 街車站很近，你到那裡會看到指示牌和地圖。" },
+          { speaker: "Maria", en: "Thank you so much for these directions!", zh: "真的非常感謝你幫我指路！" },
+          { speaker: "Henry", en: "It’s nothing. Enjoy your visit to Central Park!", zh: "小事情而已，祝你玩得開心，好好享受中央公園。" }
+        ];
+
+        let currentPage = 0;
+        const linesPerPage = 2;
+
+        function renderPage() {
+            const screen = document.getElementById('dialogue-screen');
+            const totalPages = Math.ceil(dialogues.length / linesPerPage);
+            screen.innerHTML = ''; 
+
+            const start = currentPage * linesPerPage;
+            const pageLines = dialogues.slice(start, start + linesPerPage);
+
+            pageLines.forEach((item, index) => {
+                const isMaria = item.speaker === "Maria";
+                const bubble = document.createElement('div');
+                bubble.className = `speech-bubble ${isMaria ? "left" : "right"}`;
+                
+                const safeText = item.en.replace(/'/g, "\\'");
+
+                bubble.innerHTML = `
+                    <span class="speaker-name">${item.speaker}</span>
+                    <div class="text-en">${item.en}</div>
+                    <div class="text-zh" id="zh-${index}" style="display:none;">${item.zh}</div>
+                    <div class="bubble-actions">
+                        <button class="action-btn" onclick="speakText('${safeText}')">🔊 發音</button>
+                        <button class="action-btn" onclick="toggleTranslation(${index})">文 翻譯</button>
+                    </div>
+                `;
+                screen.appendChild(bubble);
+            });
+
+            document.getElementById('page-num').innerText = currentPage + 1;
+            document.getElementById('total-pages').innerText = totalPages;
+            document.getElementById('prevBtn').style.visibility = currentPage === 0 ? "hidden" : "visible";
+            document.getElementById('nextBtn').innerText = (currentPage === totalPages - 1) ? "完成練習" : "下一頁";
+        }
+
+        function changePage(step) {
+            const totalPages = Math.ceil(dialogues.length / linesPerPage);
+            if (currentPage + step >= 0 && currentPage + step < totalPages) {
+                currentPage += step;
+                renderPage();
+                window.scrollTo(0,0);
+            } else if (currentPage + step === totalPages) {
+                alert("恭喜！您已讀完這段中央公園問路的對話。");
+                location.href = 'learning-menu.html';
+            }
+        }
+
+        function toggleTranslation(index) {
+            const zhText = document.getElementById(`zh-${index}`);
+            zhText.style.display = zhText.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // 使用瀏覽器內建合成發音
+        function speakText(text) {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'en-US';
+            msg.rate = 0.9; // 語速稍微放慢
+            window.speechSynthesis.speak(msg);
+        }
+
+        renderPage();
+    </script>
+</body>
+</html>
