@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>紐約問路英文測驗 - 隨機題庫版</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", Arial, sans-serif;
+      padding: 20px;
+      background: #f0f8ff;
+      line-height: 1.6;
+    }
+    .quiz-container {
+      background: white;
+      max-width: 650px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    h1 { text-align: center; color: #1a5276; font-size: 24px; margin-bottom: 25px; }
+    h2 { font-size: 1.2rem; color: #34495e; margin-bottom: 20px; min-height: 3em; }
+    
+    .option {
+      margin: 12px 0;
+      padding: 0;
+      border: 2px solid #edf2f7;
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+    .option:hover { background: #f7fafc; border-color: #3498db; }
+    .option label { 
+      cursor: pointer; 
+      display: block; 
+      width: 100%; 
+      padding: 15px 20px;
+      box-sizing: border-box;
+    }
+    .option input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
+
+    .control-btns { display: flex; gap: 10px; margin-top: 20px; }
+    
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #007bff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      flex: 1;
+      font-weight: bold;
+    }
+    button:hover { background: #0056b3; }
+    button:disabled { background: #bdc3c7; cursor: not-allowed; }
+    
+    .speak-btn {
+      background: #ecf0f1;
+      color: #34495e;
+      border: 1px solid #bdc3c7;
+      margin-bottom: 15px;
+      max-width: 120px;
+      font-size: 0.9em;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+      font-size: 1.1em;
+      min-height: 1.5em;
+    }
+    .progress {
+      text-align: right;
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>紐約問路英文測驗</h1>
+    <div id="progress" class="progress"></div>
+    
+    <button class="speak-btn" onclick="speakQuestion()">🔊 聽題目</button>
+    
+    <h2 id="question">載入中...</h2>
+    <form id="quizForm"></form>
+    
+    <div class="control-btns">
+      <button id="submitBtn" type="button" onclick="checkAnswer()">提交答案</button>
+    </div>
+    
+    <div id="result"></div>
+  </div>
+
+  <script>
+    // 根據您提供的題目進行更新
+    const questions = [
+      { question: "Excuse me. Could you show me the way to the train ________?", options: ["stop", "station", "stool", "stand"], correct: "station" },
+      { question: "You have been so much ________ to me.", options: ["hill", "height", "honor", "helpful"], correct: "helpful" },
+      { question: "Excuse me. Could you show me the ________ to the department store?", options: ["direction", "dictionary", "dove", "drought"], correct: "direction" },
+      { question: "I hope that I can ________ New York one day.", options: ["victory", "voice", "visit", "vehicle"], correct: "visit" },
+      { question: "It will ________ over thirty minutes to get there.", options: ["spend", "take", "cost", "pay"], correct: "take" },
+      { question: "It’s ________ cold here. We’d better not stay outside.", options: ["great", "pretty", "visit", "direction"], correct: "pretty" },
+      { question: "How can I ________ there? I am a stranger here.", options: ["get", "take", "do", "jump"], correct: "get" },
+      { question: "You should take a ________ across from the department store.", options: ["success", "substitute", "suggestion", "subway"], correct: "subway" },
+      { question: "We should ________ the train and transfer to another bus to the library.", options: ["take off", "get off", "jump out", "go off"], correct: "get off" },
+      { question: "This book is a ________ travel tool.", options: ["help", "helpful", "holiday", "hallway"], correct: "helpful" }
+    ];
+
+    let shuffledQuestions = [];
+    let currentQuestion = 0;
+    let score = 0;
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function startQuiz() {
+      shuffledQuestions = shuffle([...questions]); 
+      currentQuestion = 0;
+      score = 0;
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const q = shuffledQuestions[currentQuestion];
+      document.getElementById("question").innerText = `${currentQuestion + 1}. ${q.question}`;
+      document.getElementById("progress").innerText = `進度：${currentQuestion + 1} / ${shuffledQuestions.length}`;
+
+      const form = document.getElementById("quizForm");
+      form.innerHTML = "";
+      
+      const shuffledOptions = shuffle([...q.options]);
+      shuffledOptions.forEach(opt => {
+        const div = document.createElement("div");
+        div.classList.add("option");
+        div.innerHTML = `
+          <label>
+            <input type="radio" name="answer" value="${opt}"> ${opt}
+          </label>
+        `;
+        form.appendChild(div);
+      });
+      
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("submitBtn").disabled = false;
+      document.getElementById("submitBtn").innerText = "提交答案";
+    }
+
+    function checkAnswer() {
+      const resultDiv = document.getElementById("result");
+      const selectedOption = document.querySelector('input[name="answer"]:checked');
+
+      if (!selectedOption) {
+        resultDiv.innerHTML = "⚠️ 請選擇一個答案！";
+        resultDiv.style.color = "orange";
+        return;
+      }
+
+      const selected = selectedOption.value;
+      const correct = shuffledQuestions[currentQuestion].correct;
+      const btn = document.getElementById("submitBtn");
+      
+      btn.disabled = true;
+
+      if (selected === correct) {
+        score++;
+        resultDiv.innerHTML = "✅ 正確！";
+        resultDiv.style.color = "#27ae60";
+      } else {
+        resultDiv.innerHTML = `❌ 錯誤！正確答案是: <br><span style="color:#2c3e50">${correct}</span>`;
+        resultDiv.style.color = "#e74c3c";
+      }
+
+      setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < shuffledQuestions.length) {
+          loadQuestion();
+        } else {
+          showFinalScore();
+        }
+      }, 1500);
+    }
+
+    function speakQuestion() {
+      window.speechSynthesis.cancel();
+      const text = shuffledQuestions[currentQuestion].question.replace(/________/g, "blank");
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US';
+      msg.rate = 0.9;
+      window.speechSynthesis.speak(msg);
+    }
+
+    function showFinalScore() {
+      const container = document.querySelector(".quiz-container");
+      let feedback = score >= 8 ? "🏆 太棒了！你的英文基礎很紮實！" : "📖 練習是成功的關鍵，再試一次吧！";
+      
+      container.innerHTML = `
+        <h1>🎉 測驗完成！</h1>
+        <div style="text-align:center; margin: 30px 0;">
+            <p style="font-size: 28px; margin-bottom:10px;">您的得分: <strong style="color:#007bff;">${score}</strong> / ${shuffledQuestions.length}</p>
+            <p style="font-size: 18px; color:#7f8c8d;">${feedback}</p>
+        </div>
+        <button type="button" onclick="location.reload()">重新挑戰</button>
+        <button type="button" style="background:#6c757d; margin-top:10px;" onclick="window.location.href='learning-menu.html'">返回選單</button>
+      `;
+    }
+
+    window.onload = startQuiz;
+  </script>
+</body>
+</html>
