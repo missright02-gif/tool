@@ -13,7 +13,7 @@
         }
         .vocab-container {
             width: 95%;
-            max-width: 480px; /* 更緊湊，避免太寬 */
+            max-width: 480px; /* 更緊湊 */
             background: white; border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             padding: 20px; position: relative;
@@ -30,7 +30,7 @@
             border-radius: 12px;
             background-color: #f0f0f0;
         }
-        .footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+        .footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 10px; }
         .nav-btn { background: #007bff; color: white; border: none; padding: 8px 20px; border-radius: 40px; font-weight: bold; cursor: pointer; }
         .nav-btn:disabled { background: #cfd8dc; }
         .audio-btn { background: #eceff1; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.1em; }
@@ -54,6 +54,7 @@
         <button class="nav-btn" id="prevBtn" onclick="changeWord(-1)">← 上一個</button>
         <div id="progress" style="font-weight: bold; color: #546e7a;">1 / 22</div>
         <button class="nav-btn" id="nextBtn" onclick="changeWord(1)">下一個 →</button>
+        <button class="nav-btn" onclick="window.location.href='menu.html'">回選單</button>
     </div>
 </div>
 
@@ -104,7 +105,7 @@
             `;
             document.getElementById('progress').innerText = `${currentIndex + 1} / ${vocabulary.length}`;
             document.getElementById('prevBtn').disabled = currentIndex === 0;
-            document.getElementById('nextBtn').innerText = currentIndex === vocabulary.length - 1 ? "重新複習" : "下一個 →";
+            document.getElementById('nextBtn').innerText = currentIndex === vocabulary.length - 1 ? "完成複習" : "下一個 →";
 
             // 淡入
             setTimeout(() => card.classList.add('show'), 50);
@@ -116,8 +117,8 @@
             currentIndex += step;
             renderCard();
         } else if (currentIndex + step === vocabulary.length) {
-            currentIndex = 0;
-            renderCard();
+            alert("✨ 恭喜完成單字複習！");
+            window.location.href = "menu.html"; // 完成後自動跳轉到選單
         }
     }
 
@@ -135,8 +136,5 @@
 </script>
 </body>
 </html>
-
-
-
 
 
