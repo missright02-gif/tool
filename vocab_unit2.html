@@ -12,33 +12,51 @@
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
         .vocab-container {
-            width: 95%; max-width: 700px;
-            background: white; border-radius: 30px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-            padding: 30px; position: relative;
+            width: 95%;
+            max-width: 480px; /* 更緊湊 */
+            background: white; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 20px; position: relative;
             border: 1px solid #ffe0b2;
         }
-        .top-bar { position: absolute; top: 0; left: 0; width: 100%; height: 10px; background: linear-gradient(to right, #f39c12, #e67e22); border-radius: 30px 30px 0 0; }
-        .word-main { font-size: 2.8em; font-weight: bold; color: #e67e22; margin-bottom: 5px; }
-        .pos-zh { font-size: 1.6em; color: #2c3e50; margin-bottom: 25px; font-weight: bold; }
-        .word-image-container { width: 100%; text-align: center; margin-bottom: 20px; }
-        .word-image { width: 100%; height: 250px; object-fit: cover; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
-        .nav-btn { background: #e67e22; color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .top-bar { position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #f39c12, #e67e22); border-radius: 20px 20px 0 0; }
+        .word-main { font-size: 2em; font-weight: bold; color: #e67e22; margin-bottom: 5px; }
+        .pos-zh { font-size: 1.2em; color: #2c3e50; margin-bottom: 15px; font-weight: bold; }
+        .word-image-container { width: 100%; text-align: center; margin-bottom: 15px; }
+        .word-image {
+            width: 100%;
+            height: auto;
+            max-height: 220px; /* 限制圖片高度 */
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: #fef9f3;
+        }
+        .footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+        .nav-btn { background: #e67e22; color: white; border: none; padding: 8px 20px; border-radius: 40px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .nav-btn:hover { background: #d35400; }
         .nav-btn:disabled { background: #edbb99; cursor: not-allowed; }
-        .audio-btn { background: #fff3e0; border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-size: 1.4em; color: #e67e22; }
+        .audio-btn { background: #fff3e0; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.1em; color: #e67e22; }
         .audio-btn:hover { background: #ffe0b2; }
+
+        /* 淡出動畫 */
+        .fade {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .fade.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
 
 <div class="vocab-container">
     <div class="top-bar"></div>
-    <div id="word-card"></div>
+    <div id="word-card" class="fade"></div>
     <div class="footer-nav">
         <button class="nav-btn" id="prevBtn" onclick="changeWord(-1)">← 上一個</button>
-        <div id="progress" style="font-weight: bold; color: #a04000; font-size: 1.2em;">1 / 9</div>
+        <div id="progress" style="font-weight: bold; color: #a04000; font-size: 1.1em;">1 / 9</div>
         <button class="nav-btn" id="nextBtn" onclick="changeWord(1)">下一個 →</button>
     </div>
 </div>
@@ -61,22 +79,27 @@
     function renderCard() {
         const card = document.getElementById('word-card');
         const item = vocabulary[currentIndex];
-        card.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <div class="word-main">${item.word}</div>
-                <button class="audio-btn" onclick="speak('${item.word}')">🔊</button>
-            </div>
-            <div class="pos-zh">
-                <span style="color: #e67e22; font-style: italic; margin-right:15px; font-weight: normal;">${item.pos}</span> 
-                ${item.zh}
-            </div>
-            <div class="word-image-container">
-                <img src="${item.image}" class="word-image" alt="visual aid">
-            </div>
-        `;
-        document.getElementById('progress').innerText = `${currentIndex + 1} / ${vocabulary.length}`;
-        document.getElementById('prevBtn').disabled = currentIndex === 0;
-        document.getElementById('nextBtn').innerText = currentIndex === vocabulary.length - 1 ? "完成複習" : "下一個 →";
+
+        // 淡出
+        card.classList.remove('show');
+        setTimeout(() => {
+            card.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="word-main">${item.word}</div>
+                    <button class="audio-btn" onclick="speak('${item.word}')">🔊</button>
+                </div>
+                <div class="pos-zh"><span style="color: #e67e22; font-style: italic; margin-right:8px; font-weight: normal;">${item.pos}</span> ${item.zh}</div>
+                <div class="word-image-container">
+                    <img src="${item.image}" class="word-image" alt="visual aid">
+                </div>
+            `;
+            document.getElementById('progress').innerText = `${currentIndex + 1} / ${vocabulary.length}`;
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').innerText = currentIndex === vocabulary.length - 1 ? "完成複習" : "下一個 →";
+
+            // 淡入
+            setTimeout(() => card.classList.add('show'), 50);
+        }, 300);
     }
 
     function changeWord(step) {
@@ -98,7 +121,9 @@
         window.speechSynthesis.speak(msg);
     }
 
+    // 初始顯示
     renderCard();
+    document.getElementById('word-card').classList.add('show');
 </script>
 </body>
 </html>
