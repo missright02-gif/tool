@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>對話練習 - Central Park</title>
+    <link rel="stylesheet" href="style.css">
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', 'Microsoft JhengHei', sans-serif;
-            background-color: #f0f7ff;
             background-image: repeating-linear-gradient(
                 45deg, 
                 transparent, 
                 transparent 25px, 
-                rgba(0, 123, 255, 0.03) 25px, 
-                rgba(0, 123, 255, 0.03) 26px
+                var(--accent-color) 25px, 
+                var(--accent-color) 26px
             );
             display: flex;
             justify-content: center;
@@ -38,132 +35,122 @@
             background: rgba(255, 255, 255, 0.9);
             padding: 15px 25px;
             border-radius: 50px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
         }
 
         .progress-info { 
-            color: #1a5276; 
+            color: var(--primary-color); 
             font-weight: bold; 
-            font-size: 1.3em; 
+            font-size: 1.1em; 
         }
 
         .dialogue-screen {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 40px;
+            gap: 30px;
         }
 
         .speech-bubble {
-            padding: 30px;
-            border-radius: 25px;
+            padding: 25px;
+            border-radius: 20px;
             position: relative;
-            max-width: 90%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 85%;
+            box-shadow: var(--shadow);
             background: white;
             transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Maria (左側) - 使用主題色或輔助色 */
         .speech-bubble.left {
             align-self: flex-start;
             border-bottom-left-radius: 0;
-            border-left: 10px solid #007bff;
+            border-left: 8px solid var(--primary-color);
         }
 
+        /* Henry (右側) - 使用淺色背景 */
         .speech-bubble.right {
             align-self: flex-end;
-            background: #e3f2fd;
+            background: var(--accent-color);
             border-bottom-right-radius: 0;
-            border-right: 10px solid #00c853;
+            border-right: 8px solid var(--secondary-color);
         }
 
         .speaker-name {
-            font-size: 1.1em;
+            font-size: 0.9em;
             font-weight: bold;
-            color: #546e7a;
-            margin-bottom: 12px;
+            color: var(--text-light);
+            margin-bottom: 8px;
             display: block;
         }
 
         .text-en {
-            font-size: 1.8em;
-            color: #2c3e50;
+            font-size: 1.6em; /* 稍微調整字體，平衡手機閱讀感 */
+            color: var(--text-dark);
             line-height: 1.4;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             font-weight: 500;
         }
 
         .text-zh {
-            font-size: 1.3em;
-            color: #607d8b;
-            padding-top: 15px;
-            border-top: 2px dashed #cfd8dc;
-            margin-bottom: 20px;
+            font-size: 1.2em;
+            color: var(--text-light);
+            padding-top: 12px;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+            margin-bottom: 15px;
         }
 
         .bubble-actions {
             display: flex;
-            gap: 15px;
+            gap: 12px;
         }
 
         .action-btn {
             background: white;
-            border: 2px solid #007bff;
-            color: #007bff;
-            border-radius: 12px;
-            padding: 8px 16px;
+            border: 1.5px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 8px;
+            padding: 6px 16px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 0.9em;
             font-weight: bold;
         }
 
         .action-btn:hover {
-            background: #007bff;
+            background: var(--primary-color);
             color: white;
         }
 
         .navigation-controls {
-            margin-top: 50px;
+            margin-top: 40px;
             display: flex;
             justify-content: space-between;
             padding-bottom: 50px;
         }
-
-        .nav-btn {
-            padding: 15px 45px;
-            border-radius: 50px;
-            border: none;
-            background: #90a4ae;
-            color: white;
-            font-weight: bold;
-            font-size: 1.3em;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-        }
-
-        .nav-btn.next {
-            background: #007bff;
-        }
     </style>
 </head>
-<body>
 
-    <div class="dialogue-container">
+<body class="unit2"> <div class="dialogue-container">
         <div class="top-nav">
-            <button style="border:none; background:none; cursor:pointer; color:#007bff; font-weight:bold; font-size:1.2em;" onclick="goToMenu()">🏠 返回選單</button>
-            <div class="progress-info">頁數：<span id="page-num">1</span> / <span id="total-pages"></span></div>
+            <button style="border:none; background:none; cursor:pointer; color:var(--primary-color); font-weight:bold; font-size:1.1em;" onclick="location.href='menu.html'">🏠 返回選單</button>
+            <div class="progress-info">第 <span id="page-num">1</span> / <span id="total-pages"></span> 頁</div>
         </div>
 
         <div id="dialogue-screen" class="dialogue-screen"></div>
 
         <div class="navigation-controls">
-            <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">上一頁</button>
-            <button class="nav-btn next" id="nextBtn" onclick="changePage(1)">下一頁</button>
+            <button class="nav-button" id="prevBtn" onclick="changePage(-1)" style="background: var(--text-light);">上一頁</button>
+            <button class="nav-button" id="nextBtn" onclick="changePage(1)">下一頁</button>
         </div>
     </div>
 
     <script>
-        // 使用反引號 `` 避免 ' 引號導致的程式錯誤
         const dialogues = [
           { speaker: "Maria", en: `Excuse me, sir. Could you help me?`, zh: "打擾一下先生，可以幫我一個忙嗎？" },
           { speaker: "Henry", en: `I can try. What’s up?`, zh: "我可以試試看，怎麼了嗎？" },
@@ -198,8 +185,6 @@
 
         function renderPage() {
             const screen = document.getElementById('dialogue-screen');
-            if (!screen) return;
-            
             const totalPages = Math.ceil(dialogues.length / linesPerPage);
             screen.innerHTML = ''; 
 
@@ -211,15 +196,12 @@
                 const bubble = document.createElement('div');
                 bubble.className = `speech-bubble ${isMaria ? "left" : "right"}`;
                 
-                // 處理發音字串中的引號
-                const speechText = item.en.replace(/'/g, "\\'");
-
                 bubble.innerHTML = `
                     <span class="speaker-name">${item.speaker}</span>
                     <div class="text-en">${item.en}</div>
                     <div class="text-zh" id="zh-${index}" style="display:none;">${item.zh}</div>
                     <div class="bubble-actions">
-                        <button class="action-btn" onclick="speakText('${speechText}')">🔊 發音</button>
+                        <button class="action-btn" onclick="speakText(\`${item.en.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">🔊 發音</button>
                         <button class="action-btn" onclick="toggleTranslation(${index})">文 翻譯</button>
                     </div>
                 `;
@@ -229,7 +211,7 @@
             document.getElementById('page-num').innerText = currentPage + 1;
             document.getElementById('total-pages').innerText = totalPages;
             document.getElementById('prevBtn').style.visibility = currentPage === 0 ? "hidden" : "visible";
-            document.getElementById('nextBtn').innerText = (currentPage === totalPages - 1) ? "完成練習" : "下一頁";
+            document.getElementById('nextBtn').innerText = (currentPage === totalPages - 1) ? "完成練習" : "下一頁 →";
         }
 
         function changePage(step) {
@@ -237,24 +219,16 @@
             if (currentPage + step >= 0 && currentPage + step < totalPages) {
                 currentPage += step;
                 renderPage();
-                window.scrollTo(0,0);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else if (currentPage + step === totalPages) {
-                alert("恭喜！您已讀完這段中央公園問路的對話。");
-                // 如果沒有 menu.html，可以改成 location.reload() 或是回到第一頁
-                try {
-                    location.href = 'learning-menu.html';
-                } catch(e) {
-                    currentPage = 0;
-                    renderPage();
-                }
+                alert("恭喜！您已完成中央公園單元的對話練習。");
+                location.href = 'menu.html';
             }
         }
 
         function toggleTranslation(index) {
             const zhText = document.getElementById(`zh-${index}`);
-            if (zhText) {
-                zhText.style.display = zhText.style.display === 'none' ? 'block' : 'none';
-            }
+            zhText.style.display = zhText.style.display === 'none' ? 'block' : 'none';
         }
 
         function speakText(text) {
@@ -265,14 +239,8 @@
             window.speechSynthesis.speak(msg);
         }
 
-        function goToMenu() {
-            window.location.href = 'menu.html';
-        }
-
-        // 確保 DOM 載入後才啟動
-        document.addEventListener('DOMContentLoaded', () => {
-            renderPage();
-        });
+        renderPage();
     </script>
 </body>
 </html>
+
