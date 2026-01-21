@@ -1,70 +1,79 @@
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>地鐵問路核心單字複習</title>
+    <title>Unit 2 核心單字複習</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        class="unit1"
         body {
-            margin: 0; padding: 0;
-            font-family: 'Arial', 'Microsoft JhengHei', sans-serif;
-            background-color: #fef9f3;
-            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; padding: 20px;
         }
         .vocab-container {
-            width: 95%;
-            max-width: 480px; /* 更緊湊 */
-            background: white; border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 20px; position: relative;
-            border: 1px solid #ffe0b2;
+            width: 100%; max-width: 480px;
+            background: white; border-radius: 25px;
+            box-shadow: var(--shadow); padding: 35px 25px 25px;
+            position: relative; overflow: hidden;
+            border: 1px solid var(--accent-color);
         }
-        .top-bar { position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: linear-gradient(to right, #f39c12, #e67e22); border-radius: 20px 20px 0 0; }
-        .word-main { font-size: 2em; font-weight: bold; color: #e67e22; margin-bottom: 5px; }
-        .pos-zh { font-size: 1.2em; color: #2c3e50; margin-bottom: 15px; font-weight: bold; }
-        .word-image-container { width: 100%; text-align: center; margin-bottom: 15px; }
-        .word-image {
-            width: 100%;
-            height: auto;
-            max-height: 220px; /* 限制圖片高度 */
-            object-fit: contain;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background-color: #fef9f3;
+        .top-bar { 
+            position: absolute; top: 0; left: 0; 
+            width: 100%; height: 12px; background: var(--primary-color); 
         }
-        .footer-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 10px; }
-        .nav-btn { background: #e67e22; color: white; border: none; padding: 8px 20px; border-radius: 40px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .nav-btn:hover { background: #d35400; }
-        .nav-btn:disabled { background: #edbb99; cursor: not-allowed; }
-        .audio-btn { background: #fff3e0; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.1em; color: #e67e22; }
-        .audio-btn:hover { background: #ffe0b2; }
-
-        /* 淡出動畫 */
-        .fade {
-            opacity: 0;
-            transition: opacity 0.5s ease;
+        .word-main { 
+            font-size: 2.4em; font-weight: bold; 
+            color: var(--primary-color); margin-bottom: 5px; 
         }
-        .fade.show {
-            opacity: 1;
+        .pos-zh { 
+            font-size: 1.2em; color: var(--text-dark); 
+            margin-bottom: 20px; font-weight: 500; 
         }
+        .word-image-container { 
+            width: 100%; margin-bottom: 20px; 
+            background-color: var(--accent-color);
+            border-radius: 15px; overflow: hidden;
+            display: flex; justify-content: center;
+            height: 250px;
+        }
+        .word-image { width: 100%; height: 100%; object-fit: cover; }
+        
+        .footer-nav { 
+            display: flex; justify-content: space-between; 
+            align-items: center; margin-top: 15px; gap: 10px; 
+        }
+        .audio-btn { 
+            background: var(--accent-color); color: var(--primary-color);
+            border: none; border-radius: 50%; width: 50px; height: 50px; 
+            cursor: pointer; font-size: 1.4em; transition: 0.2s;
+        }
+        .audio-btn:hover { transform: scale(1.1); background: var(--primary-color); color: white; }
+        
+        .fade { opacity: 0; transition: opacity 0.3s ease; }
+        .fade.show { opacity: 1; }
+        #progress { font-weight: bold; color: var(--text-light); font-size: 1.1em; }
     </style>
 </head>
-<body>
 
-<div class="vocab-container">
+<body class="unit2"> <div class="vocab-container">
     <div class="top-bar"></div>
-    <div id="word-card" class="fade"></div>
+    
+    <div id="word-card" class="fade">
+        </div>
+
     <div class="footer-nav">
-        <button class="nav-btn" id="prevBtn" onclick="changeWord(-1)">← 上一個</button>
-        <div id="progress" style="font-weight: bold; color: #a04000; font-size: 1.1em;">1 / 9</div>
-        <button class="nav-btn" id="nextBtn" onclick="changeWord(1)">下一個 →</button>
-        <button class="nav-btn" onclick="window.location.href='menu.html'">回選單</button>
+        <button class="nav-button" id="prevBtn" onclick="changeWord(-1)" style="font-size: 0.9em; padding: 10px 15px;">上一個</button>
+        <div id="progress">1 / 9</div>
+        <button class="nav-button" id="nextBtn" onclick="changeWord(1)" style="font-size: 0.9em; padding: 10px 15px;">下一個</button>
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="menu.html" style="color: var(--text-light); text-decoration: none; font-size: 0.9em; border-bottom: 1px solid currentColor;">回到課程選單</a>
     </div>
 </div>
 
 <script>
+    // 單元二單字資料（已更新為 9 個核心單字，可自行增加至 22 個）
     const vocabulary = [
         { word: "pretty", pos: "adv.", zh: "相當", image: "images/v201.png" },
         { word: "take", pos: "vt. vi.", zh: "乘車", image: "images/v202.jpg" },
@@ -83,25 +92,31 @@
         const card = document.getElementById('word-card');
         const item = vocabulary[currentIndex];
 
-        // 淡出
         card.classList.remove('show');
+        
         setTimeout(() => {
             card.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
                     <div class="word-main">${item.word}</div>
                     <button class="audio-btn" onclick="speak('${item.word}')">🔊</button>
                 </div>
-                <div class="pos-zh"><span style="color: #e67e22; font-style: italic; margin-right:8px; font-weight: normal;">${item.pos}</span> ${item.zh}</div>
+                <div class="pos-zh">
+                    <span style="color: var(--primary-color); font-style: italic; margin-right:8px;">${item.pos}</span> 
+                    ${item.zh}
+                </div>
                 <div class="word-image-container">
-                    <img src="${item.image}" class="word-image" alt="visual aid">
+                    <img src="${item.image}" class="word-image" onerror="this.src='https://via.placeholder.com/500x300?text=U2+Vocab'">
                 </div>
             `;
+            
             document.getElementById('progress').innerText = `${currentIndex + 1} / ${vocabulary.length}`;
-            document.getElementById('prevBtn').disabled = currentIndex === 0;
-            document.getElementById('nextBtn').innerText = currentIndex === vocabulary.length - 1 ? "完成複習" : "下一個 →";
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.visibility = currentIndex === 0 ? "hidden" : "visible";
+            nextBtn.innerText = currentIndex === vocabulary.length - 1 ? "完成 ✅" : "下一個 →";
 
-            // 淡入
-            setTimeout(() => card.classList.add('show'), 50);
+            card.classList.add('show');
         }, 300);
     }
 
@@ -110,8 +125,8 @@
             currentIndex += step;
             renderCard();
         } else if (currentIndex + step === vocabulary.length) {
-            alert("✨ 恭喜完成核心單字複習！");
-            window.location.href = "menu.html"; // 完成後自動跳轉到選單
+            alert("✨ 恭喜完成 Unit 2 核心單字複習！");
+            window.location.href = "menu.html";
         }
     }
 
@@ -119,13 +134,11 @@
         window.speechSynthesis.cancel();
         const msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'en-US';
-        msg.rate = 0.8;
+        msg.rate = 0.8; 
         window.speechSynthesis.speak(msg);
     }
 
-    // 初始顯示
     renderCard();
-    document.getElementById('word-card').classList.add('show');
 </script>
 </body>
 </html>
