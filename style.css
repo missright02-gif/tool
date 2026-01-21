@@ -10,10 +10,36 @@
 body {
     font-family: 'Arial', 'Microsoft JhengHei', sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
+    background-color: var(--bg-light);
     color: #333;
     overflow-x: hidden;
     min-height: 100vh;
+}
+
+/* 預設主題色 (橘色系) */
+:root {
+    --primary-color: #e67e22;
+    --secondary-color: #d35400;
+    --accent-color: #ffe0b2;
+    --bg-light: #fef9f3;
+    --text-dark: #2c3e50;
+    --text-light: #607d8b;
+}
+
+/* 單元一 (藍色系) */
+body.unit1 {
+    --primary-color: #007bff;
+    --secondary-color: #0056b3;
+    --accent-color: #e3f2fd;
+    --bg-light: #f0f7ff;
+}
+
+/* 單元二 (綠色系) */
+body.unit2 {
+    --primary-color: #43a047;
+    --secondary-color: #2e7d32;
+    --accent-color: #c8e6c9;
+    --bg-light: #f1f8e9;
 }
 
 /* Hero Section - 封面區塊 */
@@ -21,7 +47,7 @@ body {
     position: relative;
     width: 100%;
     height: 100vh; 
-    background-image: url('images/hero-background.png'); /* ✅ 修正路徑 */
+    background-image: url('images/hero-background.png');
     background-size: cover;
     background-position: center center;
     
@@ -33,7 +59,7 @@ body {
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
 }
 
-/* 🔥 半透明黑色遮罩 (overlay) 🔥 */
+/* 半透明黑色遮罩 */
 .hero-section::before {
     content: "";
     position: absolute;
@@ -41,16 +67,15 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.4); /* 黑色半透明 */
+    background: rgba(0,0,0,0.4);
     z-index: 1;
 }
 
 .hero-content {
     position: relative;
-    z-index: 2; /* 確保文字在遮罩上方 */
+    z-index: 2;
 }
 
-/* 標題字體放大樣式 */
 .hero-content h1 {
     font-size: 5.5em;
     margin-bottom: 5px;
@@ -72,24 +97,28 @@ body {
 
 /* 翻頁按鈕通用樣式 */
 .nav-button {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--primary-color);
     color: white;
     padding: 15px 40px;
-    border: 3px solid white;
+    border: none;
     border-radius: 50px;
     font-size: 1.5em;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
     text-transform: uppercase;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .nav-button:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: var(--secondary-color);
     transform: scale(1.05);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.nav-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
 }
 
 /* 響應式設計 */
