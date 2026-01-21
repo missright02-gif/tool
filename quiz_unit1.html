@@ -2,73 +2,120 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>巴黎旅遊英文測驗 - 隨機題庫版</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>旅遊英文測驗 - 隨機題庫版</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    class="unit1"
     body {
-      font-family: "Microsoft JhengHei", Arial, sans-serif;
       padding: 20px;
-      background: #f0f8ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
+
     .quiz-container {
       background: white;
+      width: 100%;
       max-width: 650px;
       margin: auto;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
     }
-    h1 { text-align: center; color: #2c3e50; font-size: 24px; }
-    h2 { font-size: 18px; color: #34495e; margin-bottom: 20px; line-height: 1.5; }
+
+    h1 { 
+        text-align: center; 
+        color: var(--primary-color); 
+        font-size: 28px; 
+        margin-bottom: 20px;
+    }
+
+    h2 { 
+        font-size: 20px; 
+        color: var(--text-dark); 
+        margin-bottom: 25px; 
+        line-height: 1.6; 
+        min-height: 60px;
+    }
+
     .option {
-      margin: 12px 0;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      transition: background 0.2s;
+      margin: 15px 0;
+      padding: 15px;
+      border: 2px solid var(--accent-color); /* 使用主題淺色作為邊框 */
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      background: var(--white);
     }
-    .option:hover { background: #f9f9f9; }
-    .option label { cursor: pointer; display: block; width: 100%; }
-    button {
-      margin-top: 15px;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #3498db;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
+
+    .option:hover { 
+        background: var(--accent-color); 
+        border-color: var(--primary-color);
+        transform: translateX(5px);
     }
-    button:hover { background: #2980b9; }
-    button:disabled { background: #bdc3c7; cursor: not-allowed; }
+
+    .option label { 
+        cursor: pointer; 
+        display: block; 
+        width: 100%; 
+        font-size: 1.1em;
+        color: var(--text-dark);
+    }
+
+    /* 隱藏原生 radio，改用自定義感覺會更精緻，但先保持簡單 */
+    input[type="radio"] {
+        margin-right: 10px;
+        transform: scale(1.2);
+    }
+
+    /* 複寫 style.css 中的 nav-button 寬度 */
+    .submit-btn {
+        width: 100%;
+        margin-top: 20px;
+    }
+
     #result {
-      margin-top: 20px;
+      margin-top: 25px;
       font-weight: bold;
       text-align: center;
-      min-height: 24px;
+      font-size: 1.2em;
+      min-height: 30px;
     }
+
     .progress {
       text-align: right;
       font-size: 14px;
-      color: #7f8c8d;
+      color: var(--text-light);
       margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .final-score {
+        text-align: center;
+    }
+    .final-score strong {
+        font-size: 2em;
+        color: var(--primary-color);
     }
   </style>
 </head>
-<body>
+
+<body class="unit1">
+
   <div class="quiz-container">
-    <h1>巴黎旅遊英文測驗</h1>
-    <div id="progress" class="progress"></div>
-    <h2 id="question">載入中...</h2>
-    <div id="audioBox"></div>
-    <form id="quizForm"></form>
-    <button id="submitBtn" type="button" onclick="checkAnswer()">提交答案</button>
-    <div id="result"></div>
+    <div id="quiz-content">
+        <h1>單元測驗</h1>
+        <div id="progress" class="progress"></div>
+        <h2 id="question">載入中...</h2>
+        <div id="audioBox"></div>
+        <form id="quizForm"></form>
+        <button id="submitBtn" class="nav-button submit-btn" type="button" onclick="checkAnswer()">提交答案</button>
+        <div id="result"></div>
+    </div>
   </div>
 
   <script>
-    // 整合後的 10 題題庫
+    // 題庫保持不變
     const questions = [
       {
         question: "1. When is John going to Paris?",
@@ -144,15 +191,11 @@
     function loadQuestion() {
       const q = shuffledQuestions[currentQuestion];
       document.getElementById("question").innerText = q.question;
-      document.getElementById("progress").innerText = `第 ${currentQuestion + 1} 題 / 共 ${shuffledQuestions.length} 題`;
-
-      const audioBox = document.getElementById("audioBox");
-      audioBox.innerHTML = q.audio ? `<audio controls><source src="${q.audio}" type="audio/mpeg"></audio>` : "";
+      document.getElementById("progress").innerText = `Progress: ${currentQuestion + 1} / ${shuffledQuestions.length}`;
 
       const form = document.getElementById("quizForm");
       form.innerHTML = "";
       
-      // 選項也會隨機排序
       shuffle([...q.options]).forEach(opt => {
         const div = document.createElement("div");
         div.classList.add("option");
@@ -172,8 +215,8 @@
       const selectedOption = document.querySelector('input[name="answer"]:checked');
 
       if (!selectedOption) {
-        result.innerHTML = "⚠️ 請選擇一個答案！";
-        result.style.color = "orange";
+        result.innerHTML = "⚠️ Please select an answer!";
+        result.style.color = "#e67e22";
         return;
       }
 
@@ -182,11 +225,11 @@
 
       if (selected === correct) {
         score++;
-        result.innerHTML = "✅ 正確！";
-        result.style.color = "green";
+        result.innerHTML = "✅ Correct!";
+        result.style.color = "#27ae60";
       } else {
-        result.innerHTML = "❌ 錯誤！正確答案是: " + correct;
-        result.style.color = "red";
+        result.innerHTML = `❌ Wrong! Correct: ${correct}`;
+        result.style.color = "#e74c3c";
       }
 
       document.getElementById("submitBtn").disabled = true;
@@ -202,15 +245,17 @@
     }
 
     function showFinalScore() {
-      const container = document.querySelector(".quiz-container");
-      let feedback = score >= 8 ? "太棒了！你非常了解巴黎旅遊！" : "再接再厲！複習一下單字會更好。";
+      const container = document.getElementById("quiz-content");
+      let feedback = score >= 8 ? "Excellent! You have mastered this unit." : "Good job! Review the vocabulary to get a better score.";
       container.innerHTML = `
-        <h1>🎉 測驗完成！</h1>
-        <div style="text-align:center; margin: 20px 0;">
-            <p style="font-size: 24px;">您的得分: <strong>${score}</strong> / ${shuffledQuestions.length}</p>
-            <p>${feedback}</p>
+        <h1>測驗完成！</h1>
+        <div class="final-score">
+            <p>您的得分</p>
+            <strong>${score} / ${shuffledQuestions.length}</strong>
+            <p style="margin: 20px 0; color: var(--text-light);">${feedback}</p>
         </div>
-        <button type="button" onclick="location.reload()">重新挑戰</button>
+        <button class="nav-button submit-btn" type="button" onclick="location.reload()">重新挑戰</button>
+        <button class="nav-button submit-btn" type="button" onclick="location.href='menu.html'" style="background: var(--text-light); margin-top:10px;">回到選單</button>
       `;
     }
 
@@ -218,4 +263,3 @@
   </script>
 </body>
 </html>
-
