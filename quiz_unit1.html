@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>旅遊英文測驗 - 隨機題庫版</title>
+  <title>巴黎旅遊英文測驗 - Unit 1</title>
   <link rel="stylesheet" href="style.css">
   <style>
     body {
@@ -25,53 +25,78 @@
     }
 
     h1 { 
-        text-align: center; 
-        color: var(--primary-color); 
-        font-size: 28px; 
-        margin-bottom: 20px;
+      text-align: center; 
+      color: var(--primary-color); 
+      font-size: 26px; 
+      margin-bottom: 20px;
+    }
+
+    .progress {
+      text-align: right;
+      font-size: 14px;
+      color: var(--text-light);
+      font-weight: bold;
+      margin-bottom: 10px;
     }
 
     h2 { 
-        font-size: 20px; 
-        color: var(--text-dark); 
-        margin-bottom: 25px; 
-        line-height: 1.6; 
-        min-height: 60px;
+      font-size: 1.25rem; 
+      color: var(--text-dark); 
+      margin-bottom: 25px; 
+      line-height: 1.6;
+      min-height: 3em;
+    }
+
+    /* 發音按鈕樣式 */
+    .speak-btn {
+      background: var(--accent-color);
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      border-radius: 50px;
+      padding: 8px 18px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 20px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .speak-btn:hover {
+      background: var(--primary-color);
+      color: white;
     }
 
     .option {
-      margin: 15px 0;
-      padding: 15px;
-      border: 2px solid var(--accent-color); /* 使用主題淺色作為邊框 */
+      margin: 12px 0;
+      border: 2px solid var(--accent-color);
       border-radius: 12px;
       transition: all 0.2s ease;
-      background: var(--white);
     }
 
     .option:hover { 
-        background: var(--accent-color); 
-        border-color: var(--primary-color);
-        transform: translateX(5px);
+      background: var(--accent-color); 
+      border-color: var(--primary-color);
+      transform: translateX(5px);
     }
 
     .option label { 
-        cursor: pointer; 
-        display: block; 
-        width: 100%; 
-        font-size: 1.1em;
-        color: var(--text-dark);
+      cursor: pointer; 
+      display: block; 
+      width: 100%; 
+      padding: 15px 20px;
+      box-sizing: border-box;
+      font-size: 1.1em;
     }
 
-    /* 隱藏原生 radio，改用自定義感覺會更精緻，但先保持簡單 */
-    input[type="radio"] {
-        margin-right: 10px;
-        transform: scale(1.2);
+    .option input[type="radio"] { 
+      margin-right: 12px; 
+      transform: scale(1.3); 
     }
 
-    /* 複寫 style.css 中的 nav-button 寬度 */
     .submit-btn {
-        width: 100%;
-        margin-top: 20px;
+      width: 100%;
+      margin-top: 20px;
     }
 
     #result {
@@ -79,91 +104,87 @@
       font-weight: bold;
       text-align: center;
       font-size: 1.2em;
-      min-height: 30px;
-    }
-
-    .progress {
-      text-align: right;
-      font-size: 14px;
-      color: var(--text-light);
-      margin-bottom: 10px;
-      font-weight: bold;
+      min-height: 1.5em;
     }
 
     .final-score {
         text-align: center;
+        padding: 20px 0;
     }
     .final-score strong {
-        font-size: 2em;
+        font-size: 2.5em;
         color: var(--primary-color);
     }
   </style>
 </head>
 
-<body class="unit1">
-
-  <div class="quiz-container">
+<body class="unit1"> <div class="quiz-container">
     <div id="quiz-content">
-        <h1>單元測驗</h1>
+        <h1>巴黎地鐵測驗</h1>
         <div id="progress" class="progress"></div>
+        
+        <button class="speak-btn" onclick="speakQuestion()">
+            <span>🔊</span> 聽題目 (Listen)
+        </button>
+        
         <h2 id="question">載入中...</h2>
-        <div id="audioBox"></div>
         <form id="quizForm"></form>
+        
         <button id="submitBtn" class="nav-button submit-btn" type="button" onclick="checkAnswer()">提交答案</button>
+        
         <div id="result"></div>
     </div>
   </div>
 
   <script>
-    // 題庫保持不變
     const questions = [
       {
-        question: "1. When is John going to Paris?",
+        question: "When is John going to Paris?",
         options: ["Tomorrow", "In a month", "In a week", "In two weeks"],
         correct: "In a month"
       },
       {
-        question: "2. What does Stephanie say about signs and maps?",
+        question: "What does Stephanie say about signs and maps?",
         options: ["They are cheap.", "They will tell John where to buy tickets.", "They are difficult for foreigners to read.", "They are printed in many different languages."],
         correct: "They are printed in many different languages."
       },
       {
-        question: "3. What will John need to buy a ticket from one of the machines?",
+        question: "What will John need to buy a ticket from one of the machines?",
         options: ["A Metro pass", "Francs", "A credit card", "Help from an employee"],
         correct: "A credit card"
       },
       {
-        question: "4. How often does John say he will probably ride the Metro?",
+        question: "How often does John say he will probably ride the Metro?",
         options: ["Every day", "Once in two weeks", "twice a week", "For a long trip"],
         correct: "Every day"
       },
       {
-        question: "5. How does John feel after talking to Stephanie?",
+        question: "How does John feel after talking to Stephanie?",
         options: ["Questionable", "Confident", "Confused", "Ignorant"],
         correct: "Confident"
       },
       {
-        question: "6. (Vocabulary) I will go to Paris for a ________ tomorrow.",
+        question: "I will go to Paris for a ________ tomorrow.",
         options: ["vacation", "company", "signature", "subway"],
         correct: "vacation"
       },
       {
-        question: "7. (Vocabulary) The ________ from Paris teaches French in Taiwan.",
+        question: "The ________ from Paris teaches French in Taiwan.",
         options: ["forever", "focus", "foreigner", "follower"],
         correct: "foreigner"
       },
       {
-        question: "8. (Vocabulary) I always take a ________ to the city center in Paris.",
+        question: "I always take a ________ to the city center in Paris.",
         options: ["subject", "subway", "submarine", "success"],
         correct: "subway"
       },
       {
-        question: "9. (Vocabulary) I always take an underground to ________ the crowds at the rush hours.",
+        question: "I always take an underground to ________ the crowds at the rush hours.",
         options: ["available", "average", "arrive", "avoid"],
         correct: "avoid"
       },
       {
-        question: "10. (Vocabulary) There are so many ________ visiting Paris during summer vacation.",
+        question: "There are so many ________ visiting Paris during summer vacation.",
         options: ["tools", "tourists", "together", "tattoos"],
         correct: "tourists"
       }
@@ -190,13 +211,14 @@
 
     function loadQuestion() {
       const q = shuffledQuestions[currentQuestion];
-      document.getElementById("question").innerText = q.question;
+      document.getElementById("question").innerText = `${currentQuestion + 1}. ${q.question}`;
       document.getElementById("progress").innerText = `Progress: ${currentQuestion + 1} / ${shuffledQuestions.length}`;
 
       const form = document.getElementById("quizForm");
       form.innerHTML = "";
       
-      shuffle([...q.options]).forEach(opt => {
+      const shuffledOptions = shuffle([...q.options]);
+      shuffledOptions.forEach(opt => {
         const div = document.createElement("div");
         div.classList.add("option");
         div.innerHTML = `
@@ -206,33 +228,36 @@
         `;
         form.appendChild(div);
       });
+      
       document.getElementById("result").innerHTML = "";
       document.getElementById("submitBtn").disabled = false;
+      document.getElementById("submitBtn").innerText = "提交答案";
     }
 
     function checkAnswer() {
-      const result = document.getElementById("result");
+      const resultDiv = document.getElementById("result");
       const selectedOption = document.querySelector('input[name="answer"]:checked');
 
       if (!selectedOption) {
-        result.innerHTML = "⚠️ Please select an answer!";
-        result.style.color = "#e67e22";
+        resultDiv.innerHTML = "⚠️ 請選擇一個答案！";
+        resultDiv.style.color = "#e67e22";
         return;
       }
 
       const selected = selectedOption.value;
       const correct = shuffledQuestions[currentQuestion].correct;
+      const btn = document.getElementById("submitBtn");
+      
+      btn.disabled = true;
 
       if (selected === correct) {
         score++;
-        result.innerHTML = "✅ Correct!";
-        result.style.color = "#27ae60";
+        resultDiv.innerHTML = "✅ 正確 (Correct)!";
+        resultDiv.style.color = "#27ae60";
       } else {
-        result.innerHTML = `❌ Wrong! Correct: ${correct}`;
-        result.style.color = "#e74c3c";
+        resultDiv.innerHTML = `❌ 錯誤！正確答案是: <br><span style="color:var(--text-dark)">${correct}</span>`;
+        resultDiv.style.color = "#e74c3c";
       }
-
-      document.getElementById("submitBtn").disabled = true;
 
       setTimeout(() => {
         currentQuestion++;
@@ -244,18 +269,30 @@
       }, 1500);
     }
 
+    // 新增：語音發音邏輯
+    function speakQuestion() {
+      window.speechSynthesis.cancel();
+      // 處理題目，如果是單字題的底線，讀成 "blank"
+      const text = shuffledQuestions[currentQuestion].question.replace(/________/g, "blank");
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US';
+      msg.rate = 0.85; 
+      window.speechSynthesis.speak(msg);
+    }
+
     function showFinalScore() {
       const container = document.getElementById("quiz-content");
-      let feedback = score >= 8 ? "Excellent! You have mastered this unit." : "Good job! Review the vocabulary to get a better score.";
+      let feedback = score >= 8 ? "🏆 太棒了！你非常了解巴黎旅遊！" : "📖 再接再厲！複習一下單字會更好。";
+      
       container.innerHTML = `
-        <h1>測驗完成！</h1>
+        <h1>🎉 測驗完成！</h1>
         <div class="final-score">
             <p>您的得分</p>
             <strong>${score} / ${shuffledQuestions.length}</strong>
-            <p style="margin: 20px 0; color: var(--text-light);">${feedback}</p>
+            <p style="margin-top:20px; color: var(--text-light);">${feedback}</p>
         </div>
         <button class="nav-button submit-btn" type="button" onclick="location.reload()">重新挑戰</button>
-        <button class="nav-button submit-btn" type="button" onclick="location.href='menu.html'" style="background: var(--text-light); margin-top:10px;">回到選單</button>
+        <button class="nav-button submit-btn" type="button" style="background:var(--text-light); margin-top:10px;" onclick="window.location.href='menu.html'">返回選單</button>
       `;
     }
 
