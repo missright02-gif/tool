@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>測驗 2 (Unit 2 - 藍色風格版)</title>
+  <title>測驗 2 (Unit 2 - 優化版)</title>
   <style>
     :root {
-      /* 妳指定的藍色系 */
-      --primary-color: #43a047; 
-      --primary-hover: #0056b3;
+      /* 統一調整為精緻藍色系 */
+      --primary-color:#43a047;
+      --primary-hover: #2e7d32;
       --accent-color: #f0f7ff;
       --success-color: #27ae60;
       --error-color: #e74c3c;
@@ -36,14 +36,11 @@
       border-radius: 20px; 
       box-shadow: var(--shadow); 
       position: relative; 
-      overflow: hidden; 
     }
 
     h1 { text-align: center; color: var(--primary-color); font-size: 26px; }
-
     .progress { text-align: right; font-size: 14px; color: var(--text-light); margin-bottom: 10px; font-weight: bold; }
 
-    /* 語音按鈕樣式 */
     .speak-btn { 
       background: #fff; 
       border: 2px solid var(--primary-color); 
@@ -64,7 +61,6 @@
     .option:hover { border-color: var(--primary-color); background: var(--accent-color); }
     .option label { display: block; padding: 15px 20px; cursor: pointer; font-size: 1.1em; }
 
-    /* 提交按鈕 */
     .submit-btn { 
       width: 100%; 
       padding: 15px; 
@@ -79,9 +75,7 @@
       transition: background 0.3s;
     }
     .submit-btn:hover:not(:disabled) { background: var(--primary-hover); }
-    .submit-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
 
-    /* 詳解區塊 */
     #explanation-box {
       display: none;
       margin-top: 20px;
@@ -94,7 +88,6 @@
       line-height: 1.6;
     }
 
-    /* 8秒倒數進度條 */
     .timer-bar-container {
       width: 100%;
       height: 6px;
@@ -106,7 +99,7 @@
     }
     .timer-bar {
       height: 100%;
-      background: var(--primary-color); /* 進度條也統一用藍色 */
+      background: var(--primary-color);
       width: 100%;
     }
 
@@ -130,10 +123,10 @@
     
     <div class="timer-bar-container" id="timerContainer">
       <div class="timer-bar" id="timerBar"></div>
-      <p style="text-align:center; font-size:12px; color:#999; margin-top:8px;">8 秒後自動進入下一題</p>
+      <p style="text-align:center; font-size:12px; color:#999; margin-top:8px;">8 秒後自動進入下一題，或點擊按鈕跳過</p>
     </div>
 
-    <button id="submitBtn" class="submit-btn" onclick="checkAnswer()">提交答案</button>
+    <button id="mainBtn" class="submit-btn" onclick="checkAnswer()">提交答案</button>
   </div>
 </div>
 
@@ -168,7 +161,11 @@ function load() {
   document.getElementById("result").innerText = "";
   document.getElementById("explanation-box").style.display = "none";
   document.getElementById("timerContainer").style.display = "none";
-  document.getElementById("submitBtn").disabled = false;
+  
+  const mainBtn = document.getElementById("mainBtn");
+  mainBtn.innerText = "提交答案";
+  mainBtn.onclick = checkAnswer;
+  mainBtn.disabled = false;
 
   const form = document.getElementById("quizForm");
   form.innerHTML = "";
@@ -185,9 +182,11 @@ function checkAnswer() {
   const isCorrect = selected.value === qObj.a;
   const resDiv = document.getElementById("result");
   const expDiv = document.getElementById("explanation-box");
+  const mainBtn = document.getElementById("mainBtn");
   const timerBar = document.getElementById("timerBar");
   
-  document.getElementById("submitBtn").disabled = true;
+  // 停止當前語音
+  window.speechSynthesis.cancel();
 
   if (isCorrect) {
     score++;
@@ -196,30 +195,49 @@ function checkAnswer() {
     resDiv.innerHTML = `<span style='color:var(--error-color);'>❌ 錯誤！正確答案是：${qObj.a}</span>`;
   }
 
-  expDiv.innerHTML = `<strong>解析：</strong><br>${qObj.exp}`;
+  expDiv.innerHTML = `<strong>詳細正解：</strong><br>${qObj.exp}`;
   expDiv.style.display = "block";
+
+  // 切換按鈕為下一題
+  mainBtn.innerText = "下一題 (Next)";
+  mainBtn.onclick = () => {
+    clearTimeout(timerTimeout);
+    nextStep();
+  };
 
   document.getElementById("timerContainer").style.display = "block";
   timerBar.style.animation = "none";
   timerBar.offsetHeight; 
   timerBar.style.animation = "shrink 8s linear forwards";
 
-  timerTimeout = setTimeout(() => {
-    current++;
-    if (current < shuffled.length) load();
-    else end();
-  }, 8000);
+  timerTimeout = setTimeout(nextStep, 8000);
+}
+
+function nextStep() {
+  current++;
+  if (current < shuffled.length) load();
+  else end();
 }
 
 function speakQuestion() {
   window.speechSynthesis.cancel();
-  const msg = new SpeechSynthesisUtterance(shuffled[current].q.replace(/________/g, "blank"));
+  let textToSpeak = shuffled[current].q;
+  
+  // 優化：如果已經開了解析，就唸出完整包含答案的句子
+  if (document.getElementById("explanation-box").style.display === "block") {
+    textToSpeak = textToSpeak.replace("________", shuffled[current].a);
+  } else {
+    textToSpeak = textToSpeak.replace("________", "blank");
+  }
+
+  const msg = new SpeechSynthesisUtterance(textToSpeak);
   msg.lang = 'en-US';
-  msg.rate = 0.9;
+  msg.rate = 0.85;
   window.speechSynthesis.speak(msg);
 }
 
 function end() {
+  clearTimeout(timerTimeout);
   const container = document.getElementById("quiz-content");
   container.innerHTML = `
     <h1>🎉 測驗完成！</h1>
@@ -234,7 +252,6 @@ function end() {
 
 window.onload = start;
 </script>
-
 </body>
 </html>
 
