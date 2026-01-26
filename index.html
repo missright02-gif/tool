@@ -3,15 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trips & Traffic - 出遊與交通</title>
+    <title>搭乘交通工具及問路英語情境對話</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="hero-section">
         <div class="hero-content">
-            <h1>Trips & Traffic</h1>
-            <p>出遊與交通</p>
+            <!-- 敏惠醫護管理專科學校標題 -->
+            <h2>
+                <img src="images/logo.png" alt="敏惠Logo" 
+                     style="height: 45px; vertical-align: middle; margin-right: 8px;">
+                敏惠醫護管理專科學校
+            </h2>
+
+            <h1>搭乘交通工具及問路英語</h1>
+            <p>情境對話</>
             
             <div class="navigation-buttons">
                 <button class="nav-button prev-button" onclick="goToPreviousPage()">
@@ -26,12 +33,23 @@
     </div>
 
     <script>
+        /**
+         * 導向下一頁 (學習選單)
+         */
         function goToNextPage() {
-            window.location.href = "menu.html"; 
+            // 實際使用時，請將 "learning-menu.html" 替換為您的選單檔案名稱
+            window.location.href = "learning-menu.html"; 
         }
 
+        /**
+         * 導向前一頁
+         */
         function goToPreviousPage() {
+            // 這是首頁，通常沒有前一頁
             alert("目前已在首頁，沒有前一頁內容。");
+            
+            // 如果這不是首頁，則使用以下程式碼：
+            // window.history.back(); // 返回瀏覽器歷史記錄中的上一頁
         }
     </script>
 
