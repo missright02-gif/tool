@@ -1,257 +1,245 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>測驗 2 (Unit 2 - 優化版)</title>
-  <style>
-    :root {
-      /* 統一調整為精緻藍色系 */
-      --primary-color:#43a047;
-      --primary-hover: #2e7d32;
-      --accent-color: #f0f7ff;
-      --success-color: #27ae60;
-      --error-color: #e74c3c;
-      --text-dark: #333;
-      --text-light: #7f8c8d;
-      --shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>對話練習 - Central Park</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-image: repeating-linear-gradient(
+                45deg, 
+                transparent, 
+                transparent 25px, 
+                var(--accent-color) 25px, 
+                var(--accent-color) 26px
+            );
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-    body { 
-      margin: 0;
-      padding: 20px; 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      min-height: 100vh; 
-      font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; 
-      background-color: #f4f7f6; 
-    }
+        .dialogue-container {
+            width: 95%;
+            max-width: 800px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
 
-    .quiz-container { 
-      background: white; 
-      width: 100%; 
-      max-width: 650px; 
-      padding: 40px 30px; 
-      border-radius: 20px; 
-      box-shadow: var(--shadow); 
-      position: relative; 
-    }
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+        }
 
-    h1 { text-align: center; color: var(--primary-color); font-size: 26px; }
-    .progress { text-align: right; font-size: 14px; color: var(--text-light); margin-bottom: 10px; font-weight: bold; }
+        .progress-info { 
+            color: var(--primary-color); 
+            font-weight: bold; 
+            font-size: 1.1em; 
+        }
 
-    .speak-btn { 
-      background: #fff; 
-      border: 2px solid var(--primary-color); 
-      color: var(--primary-color); 
-      border-radius: 50px; 
-      padding: 8px 20px; 
-      cursor: pointer; 
-      margin-bottom: 20px; 
-      transition: 0.3s; 
-      font-weight: bold;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .speak-btn:hover { background: var(--primary-color); color: white; }
+        .dialogue-screen {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
 
-    .option { margin: 12px 0; border: 2px solid #eee; border-radius: 12px; transition: 0.2s; }
-    .option:hover { border-color: var(--primary-color); background: var(--accent-color); }
-    .option label { display: block; padding: 15px 20px; cursor: pointer; font-size: 1.1em; }
+        .speech-bubble {
+            padding: 25px;
+            border-radius: 20px;
+            position: relative;
+            max-width: 85%;
+            box-shadow: var(--shadow);
+            background: white;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
 
-    .submit-btn { 
-      width: 100%; 
-      padding: 15px; 
-      background: var(--primary-color); 
-      color: white; 
-      border: none; 
-      border-radius: 10px; 
-      font-size: 18px; 
-      font-weight: bold;
-      cursor: pointer; 
-      margin-top: 20px; 
-      transition: background 0.3s;
-    }
-    .submit-btn:hover:not(:disabled) { background: var(--primary-hover); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    #explanation-box {
-      display: none;
-      margin-top: 20px;
-      padding: 15px;
-      background: #f8f9fa;
-      border-left: 5px solid var(--primary-color);
-      border-radius: 5px;
-      color: var(--text-dark);
-      animation: fadeIn 0.5s;
-      line-height: 1.6;
-    }
+        /* Maria (左側) - 使用主題色或輔助色 */
+        .speech-bubble.left {
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+            border-left: 8px solid var(--primary-color);
+        }
 
-    .timer-bar-container {
-      width: 100%;
-      height: 6px;
-      background: #eee;
-      margin-top: 15px;
-      border-radius: 3px;
-      display: none;
-      overflow: hidden;
-    }
-    .timer-bar {
-      height: 100%;
-      background: var(--primary-color);
-      width: 100%;
-    }
+        /* Henry (右側) - 使用淺色背景 */
+        .speech-bubble.right {
+            align-self: flex-end;
+            background: var(--accent-color);
+            border-bottom-right-radius: 0;
+            border-right: 8px solid var(--secondary-color);
+        }
 
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes shrink { from { width: 100%; } to { width: 0%; } }
-  </style>
+        .speaker-name {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .text-en {
+            font-size: 1.6em; /* 稍微調整字體，平衡手機閱讀感 */
+            color: var(--text-dark);
+            line-height: 1.4;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .text-zh {
+            font-size: 1.2em;
+            color: var(--text-light);
+            padding-top: 12px;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        .bubble-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: white;
+            border: 1.5px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 8px;
+            padding: 6px 16px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .navigation-controls {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 50px;
+        }
+    </style>
 </head>
-<body>
 
-<div class="quiz-container">
-  <div id="quiz-content">
-    <h1>測驗 2: 城市交通與指路</h1>
-    <div id="progress" class="progress"></div>
-    <button class="speak-btn" onclick="speakQuestion()">🔊 Listen Question</button>
-    <h2 id="question" style="font-size: 1.25rem; min-height: 3em;">Loading...</h2>
-    <form id="quizForm"></form>
-    
-    <div id="result" style="text-align:center; font-size:1.2em; margin-top:15px; font-weight:bold;"></div>
-    
-    <div id="explanation-box"></div>
-    
-    <div class="timer-bar-container" id="timerContainer">
-      <div class="timer-bar" id="timerBar"></div>
-      <p style="text-align:center; font-size:12px; color:#999; margin-top:8px;">8 秒後自動進入下一題，或點擊按鈕跳過</p>
+<body class="unit2"> <div class="dialogue-container">
+        <div class="top-nav">
+            <button style="border:none; background:none; cursor:pointer; color:var(--primary-color); font-weight:bold; font-size:1.1em;" onclick="location.href='menu.html'">🏠 返回選單</button>
+            <div class="progress-info">第 <span id="page-num">1</span> / <span id="total-pages"></span> 頁</div>
+        </div>
+
+        <div id="dialogue-screen" class="dialogue-screen"></div>
+
+        <div class="navigation-controls">
+            <button class="nav-button" id="prevBtn" onclick="changePage(-1)" style="background: var(--text-light);">上一頁</button>
+            <button class="nav-button" id="nextBtn" onclick="changePage(1)">下一頁</button>
+        </div>
     </div>
 
-    <button id="mainBtn" class="submit-btn" onclick="checkAnswer()">提交答案</button>
-  </div>
-</div>
+    <script>
+        const dialogues = [
+          { speaker: "Maria", en: `Excuse me, sir. Could you help me?`, zh: "打擾一下先生，可以幫我一個忙嗎？" },
+          { speaker: "Henry", en: `I can try. What’s up?`, zh: "我可以試試看，怎麼了嗎？" },
+          { speaker: "Maria", en: `I want to go to Central Park. Do you know how to get there from here?`, zh: "我要去中央公園，你知道從這裡怎麼去嗎？" },
+          { speaker: "Henry", en: `Yes, I do, but it is pretty far away.`, zh: "我知道，不過那裡離這裡滿遠的。" },
+          { speaker: "Maria", en: `Oh, really? Isn’t Central Park in Manhattan?`, zh: "喔，真的嗎？中央公園不是在曼哈頓嗎？" },
+          { speaker: "Henry", en: `Yes, but we’re in Lower Manhattan now. Central Park is quite far from here.`, zh: "沒錯，不過我們現在在曼哈頓南邊，中央公園離這裡還有一段距離。" },
+          { speaker: "Maria", en: `Oh, I see. How do I get there? Can I walk?`, zh: "原來如此。那我要怎麼去？可以用走的嗎？" },
+          { speaker: "Henry", en: `Well, you could, but it would take over an hour.`, zh: "嗯，你可以走路去，但大概要一個多小時。" },
+          { speaker: "Maria", en: `Oh, no! I need to meet my friend there in 30 minutes. What should I do?`, zh: "糟糕！我三十分鐘後要在那裡跟朋友見面，怎麼辦？" },
+          { speaker: "Henry", en: `Don’t worry. You can take the subway.`, zh: "別擔心，你可以搭地鐵。" },
+          { speaker: "Maria", en: `I haven’t ridden the subway in New York yet. I’ve heard it is very old.`, zh: "我還沒在紐約搭過地鐵，我聽說地鐵很老舊。" },
+          { speaker: "Henry", en: `Yes, it is, and it’s not very clean. However, it will take you to Central Park.`, zh: "是啊，車子很老，而且也不是很乾淨，不過可以帶你到中央公園。" },
+          { speaker: "Maria", en: `OK. I’ll try it. Where should I go?`, zh: "好吧，我試試看。那我應該往哪裡走？" },
+          { speaker: "Henry", en: `Walk down this street until you get to Chrystie Street. Then, turn left.`, zh: "沿著這條路直走，走到 Chrystie Street，再左轉。" },
+          { speaker: "Maria", en: `OK, then what?`, zh: "好，之後呢？" },
+          { speaker: "Henry", en: `Walk for about five minutes, until you see Grand Street Station. There, you will get on the subway train called the B Train.`, zh: "再走大約五分鐘，你會看到 Grand Street 車站。在那裡搭一班叫做 B 線的地鐵。" },
+          { speaker: "Maria", en: `Then what do I do?`, zh: "之後我要怎麼做？" },
+          { speaker: "Henry", en: `You will ride the subway for eight stops. Get off at the 72nd Street Station.`, zh: "在地鐵上坐八站，在 72 街車站下車。" },
+          { speaker: "Maria", en: `And then I’ll be at Central Park?`, zh: "下車之後就到中央公園了嗎？" },
+          { speaker: "Henry", en: `Yes, when you come out of the subway station, you’ll see the park. You can’t miss it!`, zh: "對，出了地鐵站你就會看到公園，一定看得到。" },
+          { speaker: "Maria", en: `Thank you! You have been so helpful.`, zh: "太謝謝你了，你幫了我很大的忙。" },
+          { speaker: "Henry", en: `You’re welcome. Where will you meet your friend?`, zh: "不客氣。你要在哪裡跟朋友見面？" },
+          { speaker: "Maria", en: `I will meet her at the lake in Central Park.`, zh: "我要在中央公園裡的湖邊跟她見面。" },
+          { speaker: "Henry", en: `OK, perfect. That is very close to 72nd Street Station. You will see signs and a map when you get there.`, zh: "那就剛好，湖離 72 街車站很近，你到那裡會看到指示牌和地圖。" },
+          { speaker: "Maria", en: `Thank you so much for these directions!`, zh: "真的非常感謝你幫我指路！" },
+          { speaker: "Henry", en: `It’s nothing. Enjoy your visit to Central Park!`, zh: "小事情而已，祝你玩得開心，好好享受中央公園。" }
+        ];
 
-<script>
-const questions = [
-  { q: "Excuse me. Could you show me the way to the train ________?", a: "station", options: ["stop", "station", "stool", "stand"], exp: "<b>Train station</b> 是火車站。公車站常用 bus stop，計程車排班處用 taxi stand。" },
-  { q: "You have been so much ________ to me.", a: "helpful", options: ["hill", "height", "honor", "helpful"], exp: "<b>Helpful</b> 是形容詞「有幫助的」。這句話常用於感謝對方的指引。" },
-  { q: "Excuse me. Could you show me the ________ to the department store?", a: "direction", options: ["direction", "dictionary", "dove", "drought"], exp: "<b>Direction</b> 意為「方向」。Show me the direction 是常見的問路說法。" },
-  { q: "I hope that I can ________ New York one day.", a: "visit", options: ["victory", "voice", "visit", "vehicle"], exp: "<b>Visit</b> 是動詞「造訪」。" },
-  { q: "It will ________ over thirty minutes to get there.", a: "take", options: ["spend", "take", "cost", "pay"], exp: "<b>It takes + 時間</b> 是固定句型。Spend 的主詞通常要是「人」。" },
-  { q: "It’s ________ cold here. We’d better not stay outside.", a: "pretty", options: ["great", "pretty", "visit", "direction"], exp: "在這裡 <b>pretty</b> 是副詞，意思是「相當地 (very/quite)」，而非美麗。" },
-  { q: "How can I ________ there? I am a stranger here.", a: "get", options: ["get", "take", "do", "jump"], exp: "<b>Get there</b> 是抵達某地的常用口語方式。" },
-  { q: "You should take a ________ across from the department store.", a: "subway", options: ["success", "substitute", "suggestion", "subway"], exp: "在紐約，地鐵的英文是 <b>subway</b>。" },
-  { q: "We should ________ the train and transfer to another bus.", a: "get off", options: ["take off", "get off", "jump out", "go off"], exp: "<b>Get off</b> 是從大眾運輸工具下車。Take off 則是指飛機起飛或脫衣服。" },
-  { q: "This book is a ________ travel tool.", a: "helpful", options: ["help", "helpful", "holiday", "hallway"], exp: "這裡需要形容詞修飾工具，故選 <b>helpful</b> (有幫助的)。" }
-];
+        let currentPage = 0;
+        const linesPerPage = 2;
 
-let shuffled = [];
-let current = 0;
-let score = 0;
-let timerTimeout;
+        function renderPage() {
+            const screen = document.getElementById('dialogue-screen');
+            const totalPages = Math.ceil(dialogues.length / linesPerPage);
+            screen.innerHTML = ''; 
 
-function start() {
-  shuffled = [...questions].sort(() => Math.random() - 0.5);
-  load();
-}
+            const start = currentPage * linesPerPage;
+            const pageLines = dialogues.slice(start, start + linesPerPage);
 
-function load() {
-  const qObj = shuffled[current];
-  document.getElementById("progress").innerText = `Progress: ${current + 1} / ${shuffled.length}`;
-  document.getElementById("question").innerText = qObj.q;
-  document.getElementById("result").innerText = "";
-  document.getElementById("explanation-box").style.display = "none";
-  document.getElementById("timerContainer").style.display = "none";
-  
-  const mainBtn = document.getElementById("mainBtn");
-  mainBtn.innerText = "提交答案";
-  mainBtn.onclick = checkAnswer;
-  mainBtn.disabled = false;
+            pageLines.forEach((item, index) => {
+                const isMaria = item.speaker === "Maria";
+                const bubble = document.createElement('div');
+                bubble.className = `speech-bubble ${isMaria ? "left" : "right"}`;
+                
+                bubble.innerHTML = `
+                    <span class="speaker-name">${item.speaker}</span>
+                    <div class="text-en">${item.en}</div>
+                    <div class="text-zh" id="zh-${index}" style="display:none;">${item.zh}</div>
+                    <div class="bubble-actions">
+                        <button class="action-btn" onclick="speakText(\`${item.en.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">🔊 發音</button>
+                        <button class="action-btn" onclick="toggleTranslation(${index})">文 翻譯</button>
+                    </div>
+                `;
+                screen.appendChild(bubble);
+            });
 
-  const form = document.getElementById("quizForm");
-  form.innerHTML = "";
-  [...qObj.options].sort(() => Math.random() - 0.5).forEach(opt => {
-    form.innerHTML += `<div class="option"><label><input type="radio" name="ans" value="${opt}"> ${opt}</label></div>`;
-  });
-}
+            document.getElementById('page-num').innerText = currentPage + 1;
+            document.getElementById('total-pages').innerText = totalPages;
+            document.getElementById('prevBtn').style.visibility = currentPage === 0 ? "hidden" : "visible";
+            document.getElementById('nextBtn').innerText = (currentPage === totalPages - 1) ? "完成練習" : "下一頁 →";
+        }
 
-function checkAnswer() {
-  const selected = document.querySelector('input[name="ans"]:checked');
-  if (!selected) return alert("請選擇一個答案！");
+        function changePage(step) {
+            const totalPages = Math.ceil(dialogues.length / linesPerPage);
+            if (currentPage + step >= 0 && currentPage + step < totalPages) {
+                currentPage += step;
+                renderPage();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (currentPage + step === totalPages) {
+                alert("恭喜！您已完成中央公園單元的對話練習。");
+                location.href = 'menu.html';
+            }
+        }
 
-  const qObj = shuffled[current];
-  const isCorrect = selected.value === qObj.a;
-  const resDiv = document.getElementById("result");
-  const expDiv = document.getElementById("explanation-box");
-  const mainBtn = document.getElementById("mainBtn");
-  const timerBar = document.getElementById("timerBar");
-  
-  // 停止當前語音
-  window.speechSynthesis.cancel();
+        function toggleTranslation(index) {
+            const zhText = document.getElementById(`zh-${index}`);
+            zhText.style.display = zhText.style.display === 'none' ? 'block' : 'none';
+        }
 
-  if (isCorrect) {
-    score++;
-    resDiv.innerHTML = "<span style='color:var(--success-color);'>✅ 正確 (Correct)!</span>";
-  } else {
-    resDiv.innerHTML = `<span style='color:var(--error-color);'>❌ 錯誤！正確答案是：${qObj.a}</span>`;
-  }
+        function speakText(text) {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'en-US';
+            msg.rate = 0.9;
+            window.speechSynthesis.speak(msg);
+        }
 
-  expDiv.innerHTML = `<strong>詳細正解：</strong><br>${qObj.exp}`;
-  expDiv.style.display = "block";
-
-  // 切換按鈕為下一題
-  mainBtn.innerText = "下一題 (Next)";
-  mainBtn.onclick = () => {
-    clearTimeout(timerTimeout);
-    nextStep();
-  };
-
-  document.getElementById("timerContainer").style.display = "block";
-  timerBar.style.animation = "none";
-  timerBar.offsetHeight; 
-  timerBar.style.animation = "shrink 8s linear forwards";
-
-  timerTimeout = setTimeout(nextStep, 8000);
-}
-
-function nextStep() {
-  current++;
-  if (current < shuffled.length) load();
-  else end();
-}
-
-function speakQuestion() {
-  window.speechSynthesis.cancel();
-  let textToSpeak = shuffled[current].q;
-  
-  // 優化：如果已經開了解析，就唸出完整包含答案的句子
-  if (document.getElementById("explanation-box").style.display === "block") {
-    textToSpeak = textToSpeak.replace("________", shuffled[current].a);
-  } else {
-    textToSpeak = textToSpeak.replace("________", "blank");
-  }
-
-  const msg = new SpeechSynthesisUtterance(textToSpeak);
-  msg.lang = 'en-US';
-  msg.rate = 0.85;
-  window.speechSynthesis.speak(msg);
-}
-
-function end() {
-  clearTimeout(timerTimeout);
-  const container = document.getElementById("quiz-content");
-  container.innerHTML = `
-    <h1>🎉 測驗完成！</h1>
-    <div style="text-align:center; padding: 20px 0;">
-      <p style="font-size: 1.2em;">您的得分</p>
-      <strong style="font-size: 3em; color: var(--primary-color);">${score} / ${shuffled.length}</strong>
-      <p style="margin-top: 20px; color: #555;">${score >= 8 ? "🏆 太棒了！妳對交通用語非常熟悉！" : "📖 繼續加油，多練習幾次會更棒！"}</p>
-    </div>
-    <button class="submit-btn" onclick="location.reload()">重新挑戰</button>
-  `;
-}
-
-window.onload = start;
-</script>
+        renderPage();
+    </script>
 </body>
 </html>
-
