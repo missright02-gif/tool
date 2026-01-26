@@ -3,21 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>對話練習 - Paris Trip</title>
-    <link rel="stylesheet" href="style.css">
+    <title>對話練習 - Paris Trip (Full Edition)</title>
     <style>
+        :root {
+            --primary-color: #007bff; 
+            --secondary-color: #27ae60;
+            --accent-color: #f0f7ff;
+            --text-dark: #333;
+            --text-light: #7f8c8d;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
         body {
-            /* 讓條紋背景自動跟隨主題色 (透明度調整) */
+            margin: 0;
+            background-color: #f4f7f6;
             background-image: repeating-linear-gradient(
                 45deg, 
                 transparent, 
                 transparent 25px, 
-                var(--accent-color) 25px, 
-                var(--accent-color) 26px
+                rgba(0,123,255,0.03) 25px, 
+                rgba(0,123,255,0.03) 26px
             );
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
         }
 
         .dialogue-container {
@@ -33,58 +43,49 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             padding: 15px 25px;
             border-radius: 50px;
             box-shadow: var(--shadow);
-        }
-
-        .progress-info { 
-            color: var(--primary-color); 
-            font-weight: bold; 
-            font-size: 1.1em; 
         }
 
         .dialogue-screen {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
         }
 
         .speech-bubble {
-            padding: 25px;
+            padding: 20px 25px;
             border-radius: 20px;
-            position: relative;
             max-width: 85%;
             box-shadow: var(--shadow);
             background: white;
-            transition: all 0.3s ease;
-            animation: slideIn 0.5s ease forwards;
+            position: relative;
+            animation: slideIn 0.4s ease forwards;
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 左側對話框樣式 (John) */
         .speech-bubble.left {
             align-self: flex-start;
             border-bottom-left-radius: 0;
             border-left: 8px solid var(--primary-color);
         }
 
-        /* 右側對話框樣式 (Stephanie) */
         .speech-bubble.right {
             align-self: flex-end;
-            background: var(--accent-color); /* 自動切換成淺藍或淺綠 */
+            background: #f9fffb;
             border-bottom-right-radius: 0;
             border-right: 8px solid var(--secondary-color);
         }
 
         .speaker-name {
-            font-size: 0.9em;
+            font-size: 0.85em;
             font-weight: bold;
             color: var(--text-light);
             margin-bottom: 8px;
@@ -93,43 +94,35 @@
         }
 
         .text-en {
-            font-size: 1.5em; /* 調整為更適中的大字體 */
+            font-size: 1.3em;
             color: var(--text-dark);
-            line-height: 1.4;
+            line-height: 1.5;
             margin-bottom: 12px;
             font-weight: 500;
         }
 
         .text-zh {
-            font-size: 1.2em;
-            color: var(--text-light);
-            padding-top: 12px;
+            font-size: 1.1em;
+            color: #666;
+            padding-top: 10px;
             border-top: 1px dashed rgba(0,0,0,0.1);
             margin-bottom: 15px;
         }
 
-        .bubble-actions {
-            display: flex;
-            gap: 10px;
-        }
+        .bubble-actions { display: flex; gap: 10px; }
 
-        /* 氣泡內的小按鈕 */
         .action-btn {
             background: white;
             border: 1.5px solid var(--primary-color);
             color: var(--primary-color);
             border-radius: 8px;
-            padding: 5px 15px;
+            padding: 6px 15px;
             cursor: pointer;
-            font-size: 0.9em;
             font-weight: bold;
             transition: 0.2s;
         }
 
-        .action-btn:hover {
-            background: var(--primary-color);
-            color: white;
-        }
+        .action-btn:hover { background: var(--primary-color); color: white; }
 
         .navigation-controls {
             margin-top: 40px;
@@ -137,6 +130,21 @@
             justify-content: space-between;
             padding-bottom: 40px;
         }
+
+        .nav-button {
+            padding: 12px 35px;
+            border-radius: 50px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .nav-button:disabled { background: #ccc; cursor: not-allowed; }
     </style>
 </head>
 
@@ -144,29 +152,39 @@
 
     <div class="dialogue-container">
         <div class="top-nav">
-            <button style="border:none; background:none; cursor:pointer; color:var(--primary-color); font-weight:bold; font-size:1.1em;" onclick="location.href='menu.html'">🏠 返回選單</button>
-            <div class="progress-info">第 <span id="page-num">1</span> / <span id="total-pages"></span> 頁</div>
+            <button style="border:none; background:none; cursor:pointer; color:var(--primary-color); font-weight:bold; font-size:1.1em;" onclick="alert('返回選單')">🏠 返回選單</button>
+            <div style="color:var(--primary-color); font-weight:bold;">第 <span id="page-num">1</span> / <span id="total-pages"></span> 頁</div>
         </div>
 
         <div id="dialogue-screen" class="dialogue-screen"></div>
 
         <div class="navigation-controls">
-            <button class="nav-button" id="prevBtn" onclick="changePage(-1)" style="background-color: var(--text-light);">上一頁</button>
+            <button class="nav-button" id="prevBtn" onclick="changePage(-1)" style="background:#95a5a6;">上一頁</button>
             <button class="nav-button" id="nextBtn" onclick="changePage(1)">下一頁</button>
         </div>
     </div>
 
     <script>
-        // ... (你的 dialogues 資料陣列保持不變) ...
         const dialogues = [
             { speaker: "John", en: "Hi, Stephanie. I have some great news! I’m going on vacation soon.", zh: "嗨，Stephanie。我有個好消息！我很快要去度假了。" },
             { speaker: "Stephanie", en: "That’s great, John! Where are you going? When will you leave?", zh: "太棒了，John！你要去哪裡？什麼時候出發？" },
-            // ... 後續資料請保留 ...
-            { speaker: "John", en: "Thank you. You have been very helpful. I feel more confident now.", zh: "謝謝你。你幫了大幫。我現在覺得有信心多了。" }
+            { speaker: "John", en: "I'm going to Paris in a month. I know you've been there, and I want to ask you a few questions.", zh: "我一個月後要去巴黎。我知道妳去過，所以想問妳幾個問題。" },
+            { speaker: "Stephanie", en: "Sure, John. I’ll try to help you.", zh: "當然可以，John。我會盡力幫你。" },
+            { speaker: "John", en: "Thank you. How hard is it to navigate the subway?", zh: "謝謝妳。搭地鐵（導航）會很困難嗎？" },
+            { speaker: "Stephanie", en: "Don’t worry. The Paris Metro is very convenient.", zh: "別擔心。巴黎地鐵（Metro）非常方便。" },
+            { speaker: "John", en: "The Metro – is that the name for the subway in Paris?", zh: "Metro —— 這是巴黎對地鐵的稱呼嗎？" },
+            { speaker: "Stephanie", en: "That’s right. There are signs and maps in many different languages.", zh: "沒錯。那裡有許多不同語言的指標和地圖。" },
+            { speaker: "John", en: "How does a passenger purchase a ticket? Is the price very high?", zh: "乘客要怎麼買票？票價會很貴嗎？" },
+            { speaker: "Stephanie", en: "Tickets are cheap. There are employees selling tickets at every station, or machines that take credit cards.", zh: "票很便宜。每站都有售票員，也有接受信用卡支付的售票機。" },
+            { speaker: "John", en: "What should I do if there are large crowds? Is there a way to avoid them?", zh: "如果人很多怎麼辦？有辦法避開人潮嗎？" },
+            { speaker: "John", en: "I will be there for two weeks, and I’ll probably ride it every day.", zh: "我會在那待兩個星期，而且可能每天都會搭地鐵。" },
+            { speaker: "Stephanie", en: "In that case, you should probably buy a book of tickets or a Metro pass.", zh: "既然這樣，你可能應該買一整本套票或地鐵通行證。" },
+            { speaker: "Stephanie", en: "You’ll probably have to transfer between lines. Just pay attention to the signs.", zh: "你可能需要轉乘。只要留意指標就沒問題了。" },
+            { speaker: "John", en: "Thank you. You have been very helpful. I feel more confident now.", zh: "謝謝你。妳幫了大忙，我現在覺得有信心多了。" }
         ];
 
         let currentPage = 0;
-        const linesPerPage = 2;
+        const linesPerPage = 3; // 每頁 3 句，閱讀更舒適
 
         function renderPage() {
             const screen = document.getElementById('dialogue-screen');
@@ -177,18 +195,20 @@
             const pageLines = dialogues.slice(start, start + linesPerPage);
 
             pageLines.forEach((item, index) => {
-                // John 顯示在左，其他人在右
                 const isLeft = item.speaker === "John";
                 const bubble = document.createElement('div');
                 bubble.className = `speech-bubble ${isLeft ? "left" : "right"}`;
                 
+                // 處理英文中的單引號，避免 JS 發音功能報錯
+                const safeEn = item.en.replace(/'/g, "\\'");
+
                 bubble.innerHTML = `
                     <span class="speaker-name">${item.speaker}</span>
                     <div class="text-en">${item.en}</div>
                     <div class="text-zh" id="zh-${index}" style="display:none;">${item.zh}</div>
                     <div class="bubble-actions">
-                        <button class="action-btn" onclick="speakText(\`${item.en.replace(/"/g, '&quot;')}\`)">🔊 發音</button>
-                        <button class="action-btn" onclick="toggleTranslation(${index})">文 翻譯</button>
+                        <button class="action-btn" onclick="speakText('${safeEn}')">🔊 發音</button>
+                        <button class="action-btn" style="border-color:#ccc; color:#666;" onclick="toggleTranslation(${index})">文 翻譯</button>
                     </div>
                 `;
                 screen.appendChild(bubble);
@@ -207,8 +227,7 @@
                 renderPage();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else if (currentPage + step === totalPages) {
-                alert("恭喜！您已讀完這段巴黎之旅的對話。");
-                location.href = 'menu.html';
+                alert("🎉 恭喜！您已完成本單元的對話練習。");
             }
         }
 
@@ -221,11 +240,11 @@
             window.speechSynthesis.cancel();
             const msg = new SpeechSynthesisUtterance(text);
             msg.lang = 'en-US';
-            msg.rate = 0.9;
+            msg.rate = 0.85;
             window.speechSynthesis.speak(msg);
         }
 
-        renderPage();
+        window.onload = renderPage;
     </script>
 </body>
 </html>
