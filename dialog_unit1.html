@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>對話練習 - Paris Trip (Full Edition)</title>
+    <title>對話練習 - Paris Trip</title>
     <style>
         :root {
             --primary-color: #007bff; 
@@ -17,13 +17,7 @@
         body {
             margin: 0;
             background-color: #f4f7f6;
-            background-image: repeating-linear-gradient(
-                45deg, 
-                transparent, 
-                transparent 25px, 
-                rgba(0,123,255,0.03) 25px, 
-                rgba(0,123,255,0.03) 26px
-            );
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 25px, rgba(0,123,255,0.03) 25px, rgba(0,123,255,0.03) 26px);
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -38,15 +32,36 @@
             flex-direction: column;
         }
 
+        /* 頂部導覽列 */
         .top-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
             background: rgba(255, 255, 255, 0.95);
-            padding: 15px 25px;
+            padding: 12px 20px;
             border-radius: 50px;
             box-shadow: var(--shadow);
+        }
+
+        /* 返回按鈕樣式優化 */
+        .back-btn {
+            border: none;
+            background: var(--accent-color);
+            color: var(--primary-color);
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .back-btn:hover {
+            background: var(--primary-color);
+            color: white;
         }
 
         .dialogue-screen {
@@ -62,7 +77,6 @@
             max-width: 85%;
             box-shadow: var(--shadow);
             background: white;
-            position: relative;
             animation: slideIn 0.4s ease forwards;
         }
 
@@ -98,7 +112,6 @@
             color: var(--text-dark);
             line-height: 1.5;
             margin-bottom: 12px;
-            font-weight: 500;
         }
 
         .text-zh {
@@ -108,8 +121,6 @@
             border-top: 1px dashed rgba(0,0,0,0.1);
             margin-bottom: 15px;
         }
-
-        .bubble-actions { display: flex; gap: 10px; }
 
         .action-btn {
             background: white;
@@ -121,7 +132,6 @@
             font-weight: bold;
             transition: 0.2s;
         }
-
         .action-btn:hover { background: var(--primary-color); color: white; }
 
         .navigation-controls {
@@ -137,22 +147,18 @@
             border: none;
             background: var(--primary-color);
             color: white;
-            font-size: 1em;
             font-weight: bold;
             cursor: pointer;
             box-shadow: var(--shadow);
-            transition: 0.3s;
         }
-
-        .nav-button:disabled { background: #ccc; cursor: not-allowed; }
     </style>
 </head>
 
-<body class="unit1">
+<body>
 
     <div class="dialogue-container">
         <div class="top-nav">
-            <button style="border:none; background:none; cursor:pointer; color:var(--primary-color); font-weight:bold; font-size:1.1em;" onclick="alert('返回選單')">🏠 返回選單</button>
+            <button class="back-btn" onclick="location.href='menu.html'">🏠 返回選單</button>
             <div style="color:var(--primary-color); font-weight:bold;">第 <span id="page-num">1</span> / <span id="total-pages"></span> 頁</div>
         </div>
 
@@ -184,7 +190,7 @@
         ];
 
         let currentPage = 0;
-        const linesPerPage = 3; // 每頁 3 句，閱讀更舒適
+        const linesPerPage = 3;
 
         function renderPage() {
             const screen = document.getElementById('dialogue-screen');
@@ -198,8 +204,6 @@
                 const isLeft = item.speaker === "John";
                 const bubble = document.createElement('div');
                 bubble.className = `speech-bubble ${isLeft ? "left" : "right"}`;
-                
-                // 處理英文中的單引號，避免 JS 發音功能報錯
                 const safeEn = item.en.replace(/'/g, "\\'");
 
                 bubble.innerHTML = `
@@ -227,7 +231,7 @@
                 renderPage();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else if (currentPage + step === totalPages) {
-                alert("🎉 恭喜！您已完成本單元的對話練習。");
+                location.href = 'menu.html'; // 完成後也自動回首頁
             }
         }
 
@@ -248,4 +252,3 @@
     </script>
 </body>
 </html>
-
